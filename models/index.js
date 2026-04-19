@@ -47,9 +47,14 @@ const bookingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+// Each subscription tagged with role + identifier
+// role: 'admin' | 'customer'
+// identifier: for admin → 'admin', for customer → their chatSessionId or phone
 const subscriptionSchema = new mongoose.Schema({
-  endpoint: { type: String, unique: true },
+  endpoint: { type: String, unique: true, required: true },
   keys: { p256dh: String, auth: String },
+  role: { type: String, enum: ['admin', 'customer'], default: 'customer' },
+  identifier: { type: String, default: '' }, // 'admin' or sessionId or phone
   createdAt: { type: Date, default: Date.now }
 });
 

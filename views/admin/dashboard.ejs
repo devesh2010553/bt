@@ -294,8 +294,14 @@ if ('serviceWorker' in navigator) {
           userVisibleOnly: true,
           applicationServerKey: b64ToUint8(publicKey)
         });
-        await fetch('/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sub) });
-        console.log('✅ Admin push subscribed');
+        // Subscribe as ADMIN — role=admin, identifier=admin
+        // This means ONLY admin devices receive admin push notifications
+        await fetch('/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...sub.toJSON(), role: 'admin', identifier: 'admin' })
+        });
+        console.log('✅ Admin push subscribed (admin-only notifications)');
       } catch(e) { console.log('Push setup:', e.message); }
     }
   });
