@@ -102,7 +102,7 @@ select.status-select{background:var(--bg-2);border:1px solid var(--border);color
       <div class="table-wrap">
         <table id="bookingsTable">
           <thead>
-            <tr><th>Booking ID</th><th>Customer</th><th>Car</th><th>Route</th><th>Date/Time</th><th>Fare</th><th>Advance</th><th>Status</th><th>Actions</th></tr>
+            <tr><th>Booking ID</th><th>Customer</th><th>Car</th><th>Route</th><th>Date/Time</th><th>Fare</th><th>Advance</th><th>Status</th><th>Assign Partner</th><th>Action</th></tr>
           </thead>
           <tbody>
             <% if(!bookings.length){ %>
@@ -138,6 +138,23 @@ select.status-select{background:var(--bg-2);border:1px solid var(--border);color
                 </form>
               </td>
               <td>
+                <% if(typeof partners !== 'undefined' && partners.length){ %>
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                  <% if(b.assignedPartnerName){ %>
+                  <span style="font-size:11px;color:var(--green);font-weight:600"><i class="fas fa-check-circle"></i> <%= b.assignedPartnerName %></span>
+                  <% } else { %>
+                  <select id="assign-<%= b._id %>" class="status-select" style="min-width:150px">
+                    <option value="">— Assign Partner —</option>
+                    <% partners.forEach(p => { %><option value="<%= p._id %>"><%= p.ownerName %> (<%= p.carModel %>)</option><% }) %>
+                  </select>
+                  <button class="btn" style="background:var(--blue-bg);color:var(--blue);border:1px solid rgba(26,93,171,.2);padding:5px 10px;font-size:11px" onclick="assignPartner('<%= b._id %>')"><i class="fas fa-paper-plane"></i> Assign</button>
+                  <% } %>
+                </div>
+                <% } else { %>
+                <span style="font-size:12px;color:var(--light)">No approved partners</span>
+                <% } %>
+              </td>
+              <td>
                 <a href="https://wa.me/91<%= b.customerPhone %>?text=<%= encodeURIComponent('Hello '+b.customerName+', your booking '+b.bookingId+' with Brajwasi Tour & Travels is confirmed. Journey on '+new Date(b.journeyDate).toLocaleDateString('en-IN')+' at '+b.journeyTime+'. For queries: 9411061000') %>" target="_blank" class="btn" style="background:#EAF7EE;color:#1A7A3A;border:1px solid rgba(26,122,58,.2)">
                   <i class="fab fa-whatsapp"></i>
                 </a>
@@ -160,6 +177,26 @@ function filterBookings() {
     const matchStatus = !status || row.dataset.status === status;
     row.style.display = (matchSearch && matchStatus) ? '' : 'none';
   });
+}
+
+async function assignPartner(bookingId) {
+  const sel = document.getElementById('assign-' + bookingId);
+  const partnerId = sel?.value;
+  if (!partnerId) { alert('Please select a partner first'); return; }
+  const btn = sel.nextElementSibling;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
+  try {
+    const r = await fetch('/admin/bookings/' + bookingId + '/assign', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ partnerId })
+    });
+    const d = await r.json();
+    if (d.success) {
+      const cell = sel.closest('td');
+      cell.innerHTML = '<span style="font-size:11px;color:var(--green);font-weight:600"><i class="fas fa-check-circle"></i> ' + d.assignedPartnerName + '</span>';
+      alert('Partner assigned! Email notification sent to partner.');
+    } else { alert('Failed to assign: ' + (d.error || 'Unknown error')); btn.innerHTML = '<i class="fas fa-paper-plane"></i> Assign'; btn.disabled = false; }
+  } catch(e) { alert('Error: ' + e.message); btn.innerHTML = '<i class="fas fa-paper-plane"></i> Assign'; btn.disabled = false; }
 }
 </script>
 </body>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Partners – Brajwasi Admin</title>
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--gold:#B8780A;--gold-l:#D4920E;--gold-d:#8A5A06;--gold-bg:#FFF8EC;--gold-bg2:#FEF3DC;--bg:#fff;--bg2:#F8F5F0;--bg3:#F0EBE3;--border:#E8DDD0;--text:#1A1208;--muted:#7A6A55;--light:#A0917E;--green:#1A7A3A;--green-bg:#EAF7EE;--red:#C0392B;--red-bg:#FDEDEB;--blue:#1A5DAB;--blue-bg:#EEF4FF;--r:10px;}
+*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--text);}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--bg);border-right:1px solid var(--border);padding:0;display:flex;flex-direction:column;z-index:100;}
+.sidebar-brand{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.brand-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden;flex-shrink:0;}
+.brand-icon img{width:100%;height:100%;object-fit:cover;}
+.brand-name h1{font-family:'Playfair Display',serif;font-size:13px;color:var(--text);}
+.brand-name span{font-size:9px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;}
+.nav-body{padding:8px;flex:1;overflow-y:auto;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;border-radius:8px;margin:1px 0;transition:all .2s;}
+.nav-item:hover{color:var(--gold-d);background:var(--gold-bg);}
+.nav-item.active{color:var(--gold-d);background:var(--gold-bg2);font-weight:700;}
+.nav-item i{width:16px;font-size:12px;color:var(--light);}
+.nav-item.active i{color:var(--gold);}
+.sidebar-footer{padding:10px;border-top:1px solid var(--border);}
+.main{margin-left:220px;min-height:100vh;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--border);padding:13px 24px;display:flex;justify-content:space-between;align-items:center;}
+.topbar h2{font-size:18px;font-weight:700;}
+.content{padding:22px;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
+.btn-gold{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#fff;}
+.btn-green{background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.2);}
+.btn-green:hover{background:var(--green);color:#fff;}
+.btn-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.btn-red:hover{background:var(--red);color:#fff;}
+.btn-blue{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(26,93,171,.2);}
+.btn-secondary{background:var(--bg2);color:var(--muted);border:1px solid var(--border);}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(184,120,10,.06);}
+.card-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.card-head h3{font-size:15px;font-weight:700;}
+.filter-bar{padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.filter-bar input,.filter-bar select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:8px;font-size:13px;outline:none;font-family:'DM Sans',sans-serif;}
+.partner-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.partner-header{padding:16px 20px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;border-bottom:1px solid var(--border);}
+.partner-avatar{width:44px;height:44px;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;flex-shrink:0;}
+.partner-name{font-size:16px;font-weight:700;}
+.partner-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-pending{background:var(--gold-bg2);color:var(--gold-d);border:1px solid rgba(184,120,10,.3);}
+.badge-approved{background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.25);}
+.badge-rejected{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.partner-info{padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;border-bottom:1px solid var(--border);}
+.info-item{display:flex;flex-direction:column;gap:2px;}
+.info-label{font-size:10px;color:var(--light);text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
+.info-val{font-size:13px;font-weight:600;color:var(--text);}
+.docs-row{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.doc-item{display:flex;align-items:center;gap:8px;}
+.doc-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;color:var(--blue);background:var(--blue-bg);border:1px solid rgba(26,93,171,.2);transition:all .2s;}
+.doc-btn:hover{background:var(--blue);color:#fff;}
+.doc-del-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:13px;padding:4px;opacity:.6;}
+.doc-del-btn:hover{opacity:1;}
+.actions-row{padding:14px 20px;display:flex;gap:10px;flex-wrap:wrap;}
+.empty-state{text-align:center;padding:60px;color:var(--light);}
+.empty-state i{font-size:40px;color:var(--border);display:block;margin-bottom:12px;}
+.commission-note{font-size:12px;color:var(--muted);padding:3px 0;}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon"><img src="/images/favicon.png" alt="BT" onerror="this.style.display='none';this.parentNode.innerHTML='<i class=\'fas fa-car\'></i>'"></div>
+    <div class="brand-name"><h1>Brajwasi Travels</h1><span>Admin</span></div>
+  </div>
+  <div class="nav-body">
+    <a href="/admin" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="/admin/bookings" class="nav-item"><i class="fas fa-calendar-check"></i> Bookings</a>
+    <a href="/admin/partners" class="nav-item active"><i class="fas fa-handshake"></i> Partners</a>
+    <a href="/admin/testimonials" class="nav-item"><i class="fas fa-star"></i> Reviews</a>
+  </div>
+  <div class="sidebar-footer">
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-external-link-alt"></i> View Website</a>
+    <a href="/admin/logout" class="nav-item" style="color:var(--red)"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</aside>
+<main class="main">
+  <div class="topbar">
+    <h2><i class="fas fa-handshake" style="color:var(--gold);margin-right:8px"></i>Car Partners (<%= partners.length %>)</h2>
+    <a href="/admin" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Dashboard</a>
+  </div>
+  <div class="content">
+    <div class="filter-bar">
+      <input type="text" id="searchInput" placeholder="🔍 Search by name, car, phone..." oninput="filterPartners()" style="min-width:220px">
+      <select id="statusFilter" onchange="filterPartners()">
+        <option value="">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+
+    <% if(!partners.length){ %>
+    <div class="empty-state"><i class="fas fa-handshake"></i><p>No partner registrations yet</p></div>
+    <% } else { partners.forEach(p => { %>
+    <div class="partner-card" id="pc-<%= p._id %>" data-status="<%= p.status %>" data-search="<%= p.ownerName %> <%= p.phone %> <%= p.carModel %> <%= p.carNumber %>">
+      <div class="partner-header">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="partner-avatar"><%= p.ownerName.charAt(0).toUpperCase() %></div>
+          <div>
+            <div class="partner-name"><%= p.ownerName %></div>
+            <div class="partner-sub"><%= p.carName %> <%= p.carModel %> · <%= p.carNumber %></div>
+            <div class="partner-sub">📞 <%= p.phone %> · ✉️ <%= p.email %></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <span class="badge badge-<%= p.status %>"><%= p.status === 'pending' ? '⏳ Pending' : p.status === 'approved' ? '✅ Approved' : '❌ Rejected' %></span>
+          <span style="font-size:11px;color:var(--light)">Registered: <%= new Date(p.createdAt).toLocaleDateString('en-IN') %></span>
+        </div>
+      </div>
+
+      <div class="partner-info">
+        <div class="info-item"><div class="info-label">Price / km</div><div class="info-val" style="color:var(--gold-d)">₹<%= p.pricePerKm %>/km</div></div>
+        <div class="info-item"><div class="info-label">Extra km</div><div class="info-val">₹<%= p.extraKmCharge %>/km</div></div>
+        <% if(p.fixedKm){ %>
+        <div class="info-item"><div class="info-label">Fixed Package</div><div class="info-val" style="color:var(--green)">₹<%= p.fixedPrice %> for <%= p.fixedKm %>km</div></div>
+        <% } %>
+        <div class="info-item"><div class="info-label">Seats</div><div class="info-val"><%= p.seats %> Seater <%= p.ac ? '· AC' : '' %></div></div>
+        <div class="info-item"><div class="info-label">Commission</div><div class="info-val" style="color:var(--red)"><%= p.commissionPct %>% deducted</div></div>
+      </div>
+
+      <div class="docs-row">
+        <strong style="font-size:12px;color:var(--muted);margin-right:4px">Documents:</strong>
+        <% if(p.licensePhoto){ %>
+        <div class="doc-item">
+          <a href="<%= p.licensePhoto %>" target="_blank" class="doc-btn"><i class="fas fa-id-card"></i> Driving Licence</a>
+          <button class="doc-del-btn" onclick="deleteDoc('<%= p._id %>','licensePhoto')" title="Delete"><i class="fas fa-trash"></i></button>
+        </div>
+        <% } else { %><span style="font-size:12px;color:var(--red)"><i class="fas fa-times-circle"></i> Licence missing</span><% } %>
+
+        <% if(p.rcPhoto){ %>
+        <div class="doc-item">
+          <a href="<%= p.rcPhoto %>" target="_blank" class="doc-btn"><i class="fas fa-car"></i> RC Book</a>
+          <button class="doc-del-btn" onclick="deleteDoc('<%= p._id %>','rcPhoto')" title="Delete"><i class="fas fa-trash"></i></button>
+        </div>
+        <% } else { %><span style="font-size:12px;color:var(--red)"><i class="fas fa-times-circle"></i> RC missing</span><% } %>
+
+        <% if(p.insurancePhoto){ %>
+        <div class="doc-item">
+          <a href="<%= p.insurancePhoto %>" target="_blank" class="doc-btn"><i class="fas fa-shield-alt"></i> Insurance</a>
+          <button class="doc-del-btn" onclick="deleteDoc('<%= p._id %>','insurancePhoto')" title="Delete"><i class="fas fa-trash"></i></button>
+        </div>
+        <% } else { %><span style="font-size:12px;color:var(--red)"><i class="fas fa-times-circle"></i> Insurance missing</span><% } %>
+      </div>
+
+      <div class="actions-row">
+        <% if(p.status === 'pending'){ %>
+        <button class="btn btn-green" onclick="approvePartner('<%= p._id %>')"><i class="fas fa-check"></i> Approve & Email Partner</button>
+        <button class="btn btn-red" onclick="rejectPartner('<%= p._id %>')"><i class="fas fa-times"></i> Reject</button>
+        <% } else if(p.status === 'approved'){ %>
+        <span style="color:var(--green);font-size:13px;font-weight:700"><i class="fas fa-check-circle"></i> Approved — Partner will receive booking assignments by email</span>
+        <% } else { %>
+        <button class="btn btn-green" onclick="approvePartner('<%= p._id %>')"><i class="fas fa-redo"></i> Re-approve</button>
+        <% } %>
+        <button class="btn btn-secondary" onclick="deletePartner('<%= p._id %>')"><i class="fas fa-trash"></i> Delete</button>
+      </div>
+    </div>
+    <% }) } %>
+  </div>
+</main>
+<script>
+function filterPartners() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const st = document.getElementById('statusFilter').value;
+  document.querySelectorAll('.partner-card').forEach(el => {
+    const mS = !st || el.dataset.status === st;
+    const mQ = !q || el.dataset.search.toLowerCase().includes(q);
+    el.style.display = (mS && mQ) ? 'block' : 'none';
+  });
+}
+async function approvePartner(id) {
+  if (!confirm('Approve this partner? An approval email will be sent to them.')) return;
+  const r = await fetch('/admin/partners/' + id + '/approve', { method: 'POST' });
+  const d = await r.json();
+  if (d.success) { location.reload(); }
+}
+async function rejectPartner(id) {
+  if (!confirm('Reject this partner registration?')) return;
+  await fetch('/admin/partners/' + id + '/reject', { method: 'POST' });
+  location.reload();
+}
+async function deleteDoc(id, field) {
+  if (!confirm('Delete this document? This cannot be undone.')) return;
+  await fetch('/admin/partners/' + id + '/doc', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ docField: field }) });
+  location.reload();
+}
+async function deletePartner(id) {
+  if (!confirm('Permanently delete this partner record?')) return;
+  await fetch('/admin/partners/' + id, { method: 'DELETE' });
+  location.reload();
+}
+</script>
+</body>
+</html>

@@ -189,6 +189,8 @@ input:checked+.toggle-slider:before{transform:translateX(19px);background:var(--
     <div class="nav-section">Main</div>
     <button class="nav-item active" onclick="showTab('dashboard',this)"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
     <a href="/admin/bookings" class="nav-item"><i class="fas fa-calendar-check"></i> All Bookings</a>
+    <a href="/admin/partners" class="nav-item"><i class="fas fa-handshake"></i> Partners <% if(stats.pendingPartners > 0){ %><span class="nav-badge"><%= stats.pendingPartners %></span><% } %></a>
+    <a href="/admin/testimonials" class="nav-item"><i class="fas fa-star"></i> Reviews <% if(stats.testimonialsPending > 0){ %><span class="nav-badge"><%= stats.testimonialsPending %></span><% } %></a>
 
     <div class="nav-section" style="margin-top:8px">Fleet</div>
     <button class="nav-item" onclick="showTab('add-car',this)"><i class="fas fa-plus-circle"></i> Add New Car</button>

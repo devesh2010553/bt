@@ -3,8 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brajwasi Tour & Travels – Premium Car Rentals | Agra</title>
-<meta name="description" content="Brajwasi Tour & Travels – Trusted car rental in Agra since 2018. Book Toyota Crysta for Taj Mahal tours, outstation trips and airport transfers.">
+<title>Brajwasi Travels Agra | Tour and Travels in Agra</title>
+<meta name="description" content="Brajwasi Travels Agra – Trusted Tour and Travels in Agra since 2018. Book cab for Taj Mahal tours, Fatehpur Sikri, outstation trips and airport transfers. Call 9411061000.">
+<meta name="keywords" content="tour and travels in agra, cab service agra, taxi agra, brajwasi travels, agra to delhi cab, taj mahal tour cab, outstation taxi agra">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Brajwasi Travels Agra | Tour and Travels in Agra">
+<meta property="og:description" content="Trusted cab service in Agra since 2018. Book Toyota Crysta and more for Taj Mahal tours and outstation trips.">
+<meta property="og:type" content="website">
+<!-- Google Search Console Verification -->
+<meta name="google-site-verification" content="PASTE_YOUR_GOOGLE_VERIFICATION_CODE_HERE">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" type="image/png" href="/images/favicon.png">
 <link rel="apple-touch-icon" href="/images/favicon.png">
@@ -36,6 +43,8 @@
       <a href="#cars">Our Fleet</a>
       <a href="#why-us">Why Us</a>
       <a href="/track">Track Booking</a>
+      <a href="#testimonials">Reviews</a>
+      <a href="/partner">Partner With Us</a>
       <a href="#contact">Contact</a>
       <a href="tel:9411061000" class="call-btn"><i class="fas fa-phone"></i> Call Now</a>
     </div>
@@ -148,6 +157,48 @@
   </div>
 </section>
 
+<!-- TESTIMONIALS -->
+<section class="section testimonials-section" id="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">What Customers Say</span>
+      <h2 class="section-title">Real Reviews From Real Travellers</h2>
+      <p>Honest feedback from customers who travelled with us. Every review is verified.</p>
+    </div>
+
+    <!-- Testimonials grid -->
+    <div class="testi-grid" id="testiGrid">
+      <% if(!testimonials || !testimonials.length){ %>
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">
+        <i class="fas fa-comment-slash" style="font-size:36px;color:var(--border);display:block;margin-bottom:12px"></i>
+        <p>No reviews yet. Be the first to share your experience!</p>
+      </div>
+      <% } else { testimonials.forEach(t => { %>
+      <div class="testi-card">
+        <div class="testi-stars">
+          <% for(let i=1;i<=5;i++){ %><i class="fas fa-star" style="color:<%= i<=t.rating ? '#F59E0B' : '#E8DDD0' %>"></i><% } %>
+        </div>
+        <p class="testi-msg">"<%= t.message %>"</p>
+        <div class="testi-author">
+          <div class="testi-avatar"><%= t.name.charAt(0).toUpperCase() %></div>
+          <div>
+            <div class="testi-name"><%= t.name %></div>
+            <div class="testi-date"><%= new Date(t.createdAt).toLocaleDateString('en-IN',{month:'short',year:'numeric'}) %></div>
+          </div>
+        </div>
+      </div>
+      <% }) } %>
+    </div>
+
+    <!-- Leave a review button -->
+    <div style="text-align:center;margin-top:36px">
+      <button class="btn-primary" onclick="openFeedback()" style="display:inline-flex">
+        <i class="fas fa-star"></i> Share Your Experience
+      </button>
+    </div>
+  </div>
+</section>
+
 <!-- CONTACT -->
 <section class="contact-section section" id="contact">
   <div class="container">
@@ -189,7 +240,9 @@
       <h4>Quick Links</h4>
       <a href="#cars">Our Fleet</a>
       <a href="#why-us">Why Us</a>
+      <a href="#testimonials">Reviews</a>
       <a href="/track">Track Booking</a>
+      <a href="/partner">Partner With Us</a>
       <a href="#contact">Contact</a>
     </div>
     <div class="footer-contact">
@@ -676,6 +729,119 @@ function toast(msg, type = 'success') {
 }
 
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+
+<!-- FEEDBACK MODAL -->
+<div class="modal-overlay" id="feedbackModal">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="closeFeedback()"><i class="fas fa-times"></i></button>
+    <div class="modal-header">
+      <h2><i class="fas fa-star" style="color:var(--gold);margin-right:8px"></i>Share Your Experience</h2>
+      <p>Your review helps other travellers choose wisely</p>
+    </div>
+    <form id="feedbackForm">
+      <div class="form-row">
+        <div class="form-group"><label>Your Name *</label><input type="text" id="fbName" placeholder="Full name" required></div>
+        <div class="form-group"><label>Phone *</label><input type="tel" id="fbPhone" placeholder="Mobile number" required></div>
+      </div>
+      <div class="form-group">
+        <label>Rating *</label>
+        <div class="star-picker" id="starPicker">
+          <i class="fas fa-star" data-val="1"></i>
+          <i class="fas fa-star" data-val="2"></i>
+          <i class="fas fa-star" data-val="3"></i>
+          <i class="fas fa-star" data-val="4"></i>
+          <i class="fas fa-star" data-val="5"></i>
+        </div>
+        <input type="hidden" id="fbRating" value="0">
+      </div>
+      <div class="form-group">
+        <label>Your Review *</label>
+        <textarea id="fbMsg" rows="4" placeholder="Tell us about your experience with Brajwasi Travels..." required maxlength="500"></textarea>
+        <div style="text-align:right;font-size:11px;color:var(--light)" id="fbCharCount">0 / 500</div>
+      </div>
+      <button type="submit" class="btn-primary full-btn" id="fbSubmitBtn">
+        <i class="fas fa-paper-plane"></i> Submit Review
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>
+/* ── Testimonials ─────────── */
+.testimonials-section{background:var(--bg);}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;}
+.testi-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;transition:var(--ease);}
+.testi-card:hover{border-color:rgba(184,120,10,.35);transform:translateY(-3px);box-shadow:var(--shadow);}
+.testi-stars{margin-bottom:12px;display:flex;gap:3px;font-size:15px;}
+.testi-msg{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:10px;}
+.testi-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;flex-shrink:0;}
+.testi-name{font-size:14px;font-weight:700;color:var(--text);}
+.testi-date{font-size:11px;color:var(--light);}
+/* Star picker */
+.star-picker{display:flex;gap:6px;margin-bottom:6px;}
+.star-picker i{font-size:28px;color:#E8DDD0;cursor:pointer;transition:color .15s;}
+.star-picker i.active,.star-picker i:hover{color:#F59E0B;}
+</style>
+
+<script>
+function openFeedback() { openModal('feedbackModal'); }
+function closeFeedback() { closeModal('feedbackModal'); }
+
+// Star picker
+let fbRating = 0;
+document.querySelectorAll('#starPicker i').forEach(star => {
+  star.addEventListener('click', () => {
+    fbRating = +star.dataset.val;
+    document.getElementById('fbRating').value = fbRating;
+    document.querySelectorAll('#starPicker i').forEach((s,i) => {
+      s.classList.toggle('active', i < fbRating);
+    });
+  });
+  star.addEventListener('mouseover', () => {
+    document.querySelectorAll('#starPicker i').forEach((s,i) => {
+      s.style.color = i < +star.dataset.val ? '#F59E0B' : '#E8DDD0';
+    });
+  });
+  star.addEventListener('mouseout', () => {
+    document.querySelectorAll('#starPicker i').forEach((s,i) => {
+      s.style.color = i < fbRating ? '#F59E0B' : '#E8DDD0';
+    });
+  });
+});
+
+document.getElementById('fbMsg').addEventListener('input', function() {
+  document.getElementById('fbCharCount').textContent = this.value.length + ' / 500';
+});
+
+document.getElementById('feedbackForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const rating = +document.getElementById('fbRating').value;
+  if (!rating) { toast('Please select a star rating', 'error'); return; }
+  const btn = document.getElementById('fbSubmitBtn');
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...'; btn.disabled = true;
+  try {
+    const r = await fetch('/api/testimonials', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        name: document.getElementById('fbName').value,
+        phone: document.getElementById('fbPhone').value,
+        rating,
+        message: document.getElementById('fbMsg').value
+      })
+    });
+    const d = await r.json();
+    if (d.success) {
+      closeFeedback();
+      document.getElementById('feedbackForm').reset();
+      fbRating = 0;
+      document.querySelectorAll('#starPicker i').forEach(s => s.classList.remove('active'));
+      toast('✅ Thank you! Your review will appear after approval.', 'success');
+    } else { toast('❌ ' + (d.error || 'Failed to submit'), 'error'); }
+  } catch(e) { toast('❌ Network error. Please try again.', 'error'); }
+  finally { btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Review'; btn.disabled = false; }
+});
 </script>
 </body>
 </html>

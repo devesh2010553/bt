@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Reviews – Brajwasi Admin</title>
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--gold:#B8780A;--gold-l:#D4920E;--gold-d:#8A5A06;--gold-bg:#FFF8EC;--gold-bg2:#FEF3DC;--bg:#fff;--bg2:#F8F5F0;--border:#E8DDD0;--text:#1A1208;--muted:#7A6A55;--light:#A0917E;--green:#1A7A3A;--green-bg:#EAF7EE;--red:#C0392B;--red-bg:#FDEDEB;--r:10px;}
+*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'DM Sans',sans-serif;background:var(--bg2);color:var(--text);}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--bg);border-right:1px solid var(--border);padding:0;display:flex;flex-direction:column;z-index:100;}
+.sidebar-brand{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.brand-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden;flex-shrink:0;}
+.brand-icon img{width:100%;height:100%;object-fit:cover;}
+.brand-name h1{font-family:'Playfair Display',serif;font-size:13px;color:var(--text);}
+.brand-name span{font-size:9px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;}
+.nav-body{padding:8px;flex:1;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;border-radius:8px;margin:1px 0;transition:all .2s;}
+.nav-item:hover{color:var(--gold-d);background:var(--gold-bg);}
+.nav-item.active{color:var(--gold-d);background:var(--gold-bg2);font-weight:700;}
+.nav-item i{width:16px;font-size:12px;color:var(--light);}
+.nav-item.active i{color:var(--gold);}
+.sidebar-footer{padding:10px;border-top:1px solid var(--border);}
+.main{margin-left:220px;min-height:100vh;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--border);padding:13px 24px;display:flex;justify-content:space-between;align-items:center;}
+.topbar h2{font-size:18px;font-weight:700;}
+.content{padding:22px;}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+.tcard{background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.05);}
+.tcard-body{padding:18px;}
+.tcard-stars{display:flex;gap:3px;margin-bottom:10px;font-size:15px;}
+.tcard-msg{font-size:14px;color:var(--muted);line-height:1.6;font-style:italic;margin-bottom:14px;}
+.tcard-author{display:flex;align-items:center;gap:10px;}
+.tcard-avatar{width:34px;height:34px;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0;}
+.tcard-name{font-size:13px;font-weight:700;}
+.tcard-phone{font-size:11px;color:var(--light);}
+.tcard-date{font-size:11px;color:var(--light);margin-left:auto;}
+.tcard-footer{padding:10px 18px;border-top:1px solid var(--border);display:flex;gap:8px;background:var(--bg2);}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;text-decoration:none;}
+.btn-green{background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.2);}
+.btn-green:hover{background:var(--green);color:#fff;}
+.btn-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.btn-red:hover{background:var(--red);color:#fff;}
+.btn-secondary{background:var(--bg2);color:var(--muted);border:1px solid var(--border);}
+.approved-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.2);}
+.pending-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;background:var(--gold-bg2);color:var(--gold-d);border:1px solid rgba(184,120,10,.3);}
+.tabs{display:flex;gap:6px;margin-bottom:20px;}
+.tab{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--bg);color:var(--muted);transition:all .2s;}
+.tab.active{background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#fff;border-color:transparent;}
+.empty{text-align:center;padding:50px;color:var(--light);}
+.empty i{font-size:38px;color:var(--border);display:block;margin-bottom:12px;}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.testi-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon"><img src="/images/favicon.png" alt="BT" onerror="this.style.display='none';this.parentNode.innerHTML='<i class=\'fas fa-car\'></i>'"></div>
+    <div class="brand-name"><h1>Brajwasi Travels</h1><span>Admin</span></div>
+  </div>
+  <div class="nav-body">
+    <a href="/admin" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="/admin/bookings" class="nav-item"><i class="fas fa-calendar-check"></i> Bookings</a>
+    <a href="/admin/partners" class="nav-item"><i class="fas fa-handshake"></i> Partners</a>
+    <a href="/admin/testimonials" class="nav-item active"><i class="fas fa-star"></i> Reviews</a>
+  </div>
+  <div class="sidebar-footer">
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-external-link-alt"></i> View Website</a>
+    <a href="/admin/logout" class="nav-item" style="color:var(--red)"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</aside>
+<main class="main">
+  <div class="topbar">
+    <h2><i class="fas fa-star" style="color:var(--gold);margin-right:8px"></i>Customer Reviews (<%= testimonials.length %>)</h2>
+    <a href="/admin" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Dashboard</a>
+  </div>
+  <div class="content">
+    <div class="tabs">
+      <button class="tab active" onclick="filterTab('all',this)">All (<%= testimonials.length %>)</button>
+      <button class="tab" onclick="filterTab('pending',this)">Pending (<%= testimonials.filter(t=>!t.approved).length %>)</button>
+      <button class="tab" onclick="filterTab('approved',this)">Approved (<%= testimonials.filter(t=>t.approved).length %>)</button>
+    </div>
+
+    <% if(!testimonials.length){ %>
+    <div class="empty"><i class="fas fa-comment-slash"></i><p>No reviews yet</p></div>
+    <% } else { %>
+    <div class="testi-grid" id="testiGrid">
+      <% testimonials.forEach(t => { %>
+      <div class="tcard" id="tc-<%= t._id %>" data-approved="<%= t.approved %>">
+        <div class="tcard-body">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+            <div class="tcard-stars">
+              <% for(let i=1;i<=5;i++){ %><i class="fas fa-star" style="color:<%= i<=t.rating?'#F59E0B':'#E8DDD0' %>"></i><% } %>
+            </div>
+            <%= t.approved ? '<span class="approved-badge"><i class="fas fa-check"></i> Live on site</span>' : '<span class="pending-badge">⏳ Pending</span>' %>
+          </div>
+          <p class="tcard-msg">"<%= t.message %>"</p>
+          <div class="tcard-author">
+            <div class="tcard-avatar"><%= t.name.charAt(0).toUpperCase() %></div>
+            <div><div class="tcard-name"><%= t.name %></div><div class="tcard-phone"><%= t.phone %></div></div>
+            <div class="tcard-date"><%= new Date(t.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) %></div>
+          </div>
+        </div>
+        <div class="tcard-footer">
+          <% if(!t.approved){ %>
+          <button class="btn btn-green" onclick="approveTesti('<%= t._id %>')"><i class="fas fa-check"></i> Approve</button>
+          <% } %>
+          <button class="btn btn-red" onclick="deleteTesti('<%= t._id %>')"><i class="fas fa-trash"></i> Delete</button>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</main>
+<script>
+function filterTab(type, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tcard').forEach(c => {
+    if (type === 'all') c.style.display = 'block';
+    else if (type === 'pending') c.style.display = c.dataset.approved === 'false' ? 'block' : 'none';
+    else if (type === 'approved') c.style.display = c.dataset.approved === 'true' ? 'block' : 'none';
+  });
+}
+async function approveTesti(id) {
+  await fetch('/admin/testimonials/' + id + '/approve', { method: 'POST' });
+  const el = document.getElementById('tc-' + id);
+  el.dataset.approved = 'true';
+  el.querySelector('.pending-badge')?.outerHTML;
+  location.reload();
+}
+async function deleteTesti(id) {
+  if (!confirm('Delete this review permanently?')) return;
+  await fetch('/admin/testimonials/' + id + '/reject', { method: 'POST' });
+  document.getElementById('tc-' + id)?.remove();
+}
+</script>
+</body>
+</html>

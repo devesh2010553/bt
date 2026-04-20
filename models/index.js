@@ -31,6 +31,8 @@ const bookingSchema = new mongoose.Schema({
   totalPrice: Number,
   status: { type: String, enum: ['pending','confirmed','completed','cancelled'], default: 'pending' },
   advancePaid: { type: Boolean, default: false },
+  assignedPartner: { type: mongoose.Schema.Types.ObjectId, ref: 'CarPartner', default: null },
+  assignedPartnerName: String,
   driverLat: Number,
   driverLng: Number,
   driverLastSeen: Date,
@@ -41,8 +43,8 @@ const bookingSchema = new mongoose.Schema({
 const subscriptionSchema = new mongoose.Schema({
   endpoint: { type: String, unique: true },
   keys: { p256dh: String, auth: String },
-  role: { type: String, enum: ['admin', 'customer'], default: 'customer' },
-  phone: { type: String, default: '' },   // customer's phone number (hashed or plain)
+  role: { type: String, enum: ['admin','customer'], default: 'customer' },
+  phone: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -56,9 +58,44 @@ const chatMessageSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+const testimonialSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  phone: { type: String, required: true },
+  rating: { type: Number, required: true, min: 1, max: 5 },
+  message: { type: String, required: true },
+  approved: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }
+});
+
+// Car Partner / Owner registration
+const carPartnerSchema = new mongoose.Schema({
+  ownerName: { type: String, required: true },
+  phone: { type: String, required: true },
+  email: { type: String, required: true },
+  carName: { type: String, required: true },
+  carModel: { type: String, required: true },
+  carNumber: { type: String, required: true },
+  seats: { type: Number, default: 7 },
+  ac: { type: Boolean, default: true },
+  pricePerKm: { type: Number, required: true },
+  fixedKm: { type: Number },
+  fixedPrice: { type: Number },
+  extraKmCharge: { type: Number, required: true },
+  // Document uploads
+  licensePhoto: { type: String },
+  rcPhoto: { type: String },
+  insurancePhoto: { type: String },
+  // Status
+  status: { type: String, enum: ['pending','approved','rejected'], default: 'pending' },
+  commissionPct: { type: Number, default: 10 },
+  createdAt: { type: Date, default: Date.now }
+});
+
 const Car = mongoose.model('Car', carSchema);
 const Booking = mongoose.model('Booking', bookingSchema);
 const PushSubscription = mongoose.model('PushSubscription', subscriptionSchema);
 const ChatMessage = mongoose.model('ChatMessage', chatMessageSchema);
+const Testimonial = mongoose.model('Testimonial', testimonialSchema);
+const CarPartner = mongoose.model('CarPartner', carPartnerSchema);
 
-module.exports = { Car, Booking, PushSubscription, ChatMessage };
+module.exports = { Car, Booking, PushSubscription, ChatMessage, Testimonial, CarPartner };
