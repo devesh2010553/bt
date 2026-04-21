@@ -10,7 +10,6 @@
 <meta property="og:title" content="Brajwasi Travels Agra | Tour and Travels in Agra">
 <meta property="og:description" content="Trusted cab service in Agra since 2018. Book Toyota Crysta and more for Taj Mahal tours and outstation trips.">
 <meta property="og:type" content="website">
-<!-- Google Search Console Verification -->
 <meta name="google-site-verification" content="25vVIruxvnPxmS12tcZykCuX5MjQ3eVOnWd74_PNADg">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" type="image/png" href="/images/favicon.png">
@@ -19,34 +18,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/css/main.css">
+<style>
+/* ── Testimonials ── */
+.testimonials-section{background:var(--bg);}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;}
+.testi-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;transition:var(--ease);}
+.testi-card:hover{border-color:rgba(184,120,10,.35);transform:translateY(-3px);box-shadow:var(--shadow);}
+.testi-stars{margin-bottom:12px;display:flex;gap:3px;font-size:15px;}
+.testi-msg{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:10px;}
+.testi-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;flex-shrink:0;}
+.testi-name{font-size:14px;font-weight:700;color:var(--text);}
+.testi-date{font-size:11px;color:var(--light);}
+/* ── Star picker ── */
+.star-picker{display:flex;gap:6px;margin-bottom:6px;}
+.star-picker i{font-size:28px;color:#E8DDD0;cursor:pointer;transition:color .15s;}
+.star-picker i.lit{color:#F59E0B;}
+/* ── Login bar ── */
+#loginBar{display:flex;align-items:center;gap:8px;}
+</style>
 </head>
 <body>
 
+<!-- Push bar -->
 <div id="notif-bar" class="notif-bar" style="display:none">
   <span><i class="fas fa-bell"></i> Get booking updates on your phone</span>
   <button onclick="requestPush()">Enable</button>
   <button class="close-btn" onclick="document.getElementById('notif-bar').style.display='none'"><i class="fas fa-times"></i></button>
 </div>
 
+<!-- Header -->
 <header class="header" id="header">
   <nav class="nav container">
     <a class="logo" href="/">
-      <div class="logo-icon">
-        <img src="/images/favicon.png" alt="BT" onerror="this.style.display='none';this.parentNode.innerHTML='<i class=\'fas fa-car\'></i>'">
-      </div>
-      <div>
-        <h1>Brajwasi Tour & Travels</h1>
-        <span>Est. 2018 · Agra</span>
-      </div>
+      <div class="logo-icon"><img src="/images/favicon.png" alt="BT" onerror="this.style.display='none';this.parentNode.innerHTML='<i class=\'fas fa-car\'></i>'"></div>
+      <div><h1>Brajwasi Tour & Travels</h1><span>Est. 2018 · Agra</span></div>
     </a>
     <div class="nav-links">
       <a href="#cars">Our Fleet</a>
       <a href="#why-us">Why Us</a>
-      <a href="/track">Track Booking</a>
       <a href="#testimonials">Reviews</a>
       <a href="/partner">Partner With Us</a>
+      <a href="/track">Track Booking</a>
       <a href="#contact">Contact</a>
-      <div id="loginBar" style="display:flex;align-items:center"></div>
+      <div id="loginBar"></div>
       <a href="tel:9411061000" class="call-btn"><i class="fas fa-phone"></i> Call Now</a>
     </div>
     <button class="hamburger" id="hamburger" onclick="document.getElementById('mob-menu').classList.toggle('open')"><i class="fas fa-bars"></i></button>
@@ -54,13 +69,15 @@
   <div class="mobile-menu" id="mob-menu">
     <a href="#cars" onclick="document.getElementById('mob-menu').classList.remove('open')"><i class="fas fa-car" style="color:var(--gold);margin-right:8px"></i>Our Fleet</a>
     <a href="#why-us" onclick="document.getElementById('mob-menu').classList.remove('open')"><i class="fas fa-star" style="color:var(--gold);margin-right:8px"></i>Why Us</a>
+    <a href="#testimonials" onclick="document.getElementById('mob-menu').classList.remove('open')"><i class="fas fa-star" style="color:var(--gold);margin-right:8px"></i>Reviews</a>
     <a href="/track" onclick="document.getElementById('mob-menu').classList.remove('open')"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:8px"></i>Track Booking</a>
+    <a href="/partner" onclick="document.getElementById('mob-menu').classList.remove('open')"><i class="fas fa-handshake" style="color:var(--gold);margin-right:8px"></i>Partner With Us</a>
     <a href="#contact" onclick="document.getElementById('mob-menu').classList.remove('open')"><i class="fas fa-envelope" style="color:var(--gold);margin-right:8px"></i>Contact</a>
     <a href="tel:9411061000"><i class="fas fa-phone" style="color:var(--gold);margin-right:8px"></i>9411061000</a>
   </div>
 </header>
 
-<!-- HERO -->
+<!-- Hero -->
 <section class="hero">
   <div class="hero-bg" id="heroBg"></div>
   <div class="hero-overlay"></div>
@@ -83,7 +100,7 @@
   <div class="scroll-ind"><i class="fas fa-chevron-down"></i></div>
 </section>
 
-<!-- FLEET -->
+<!-- Fleet -->
 <section class="section" id="cars">
   <div class="container">
     <div class="section-header">
@@ -94,10 +111,7 @@
     <div class="cars-grid">
       <% if(!cars.length){ %>
         <div class="no-cars"><i class="fas fa-car-side"></i><p>Fleet coming soon. Call <a href="tel:9411061000">9411061000</a></p></div>
-      <% } else { cars.forEach(car => {
-        const fkm = car.fixedPackage?.km || 0;
-        const fp  = car.fixedPackage?.price || 0;
-      %>
+      <% } else { cars.forEach(function(car){ var fkm=car.fixedPackage&&car.fixedPackage.km?car.fixedPackage.km:0; var fp=car.fixedPackage&&car.fixedPackage.price?car.fixedPackage.price:0; %>
       <div class="car-card">
         <div class="car-img-wrap">
           <img src="<%= car.image %>" alt="<%= car.model %>" loading="lazy" onerror="this.src='/images/default-crysta.jpg'">
@@ -111,38 +125,25 @@
           </div>
           <p class="car-desc"><%= car.description || 'Comfortable, reliable, professionally driven.' %></p>
           <div class="car-pricing">
-            <% if(fkm > 0){ %>
-            <div class="cp-row">
-              <span class="cp-label"><i class="fas fa-box" style="color:var(--gold)"></i> Fixed <%= fkm %>km Package</span>
-              <span class="cp-val green">₹<%= fp.toLocaleString('en-IN') %></span>
-            </div>
-            <div class="cp-row">
-              <span class="cp-label"><i class="fas fa-plus-circle" style="color:var(--gold)"></i> Extra km</span>
-              <span class="cp-val">₹<%= car.extraKmCharge %>/km</span>
-            </div>
+            <% if(fkm>0){ %>
+            <div class="cp-row"><span class="cp-label"><i class="fas fa-box" style="color:var(--gold)"></i> Fixed <%= fkm %>km Package</span><span class="cp-val green">₹<%= fp.toLocaleString('en-IN') %></span></div>
+            <div class="cp-row"><span class="cp-label"><i class="fas fa-plus-circle" style="color:var(--gold)"></i> Extra km</span><span class="cp-val">₹<%= car.extraKmCharge %>/km</span></div>
             <% } else { %>
-            <div class="cp-row">
-              <span class="cp-label"><i class="fas fa-road" style="color:var(--gold)"></i> Per km rate</span>
-              <span class="cp-val">₹<%= car.pricePerKm %>/km</span>
-            </div>
+            <div class="cp-row"><span class="cp-label"><i class="fas fa-road" style="color:var(--gold)"></i> Per km rate</span><span class="cp-val">₹<%= car.pricePerKm %>/km</span></div>
             <% } %>
-            <div class="cp-row">
-              <span class="cp-label"><i class="fas fa-toll"></i> Toll tax</span>
-              <span class="cp-val small"><%= car.tollTax %></span>
-            </div>
+            <div class="cp-row"><span class="cp-label"><i class="fas fa-toll"></i> Toll tax</span><span class="cp-val small"><%= car.tollTax %></span></div>
           </div>
-          <button class="book-btn" type="button"
-            onclick="openBooking('<%= car._id %>','<%= car.model.replace(/'/g,"\\'") %>',<%= car.pricePerKm %>,<%= fkm %>,<%= fp %>,<%= car.extraKmCharge %>)">
+          <button class="book-btn" type="button" data-carid="<%= car._id %>" data-model="<%= car.model.replace(/\"/g,'&quot;') %>" data-ppk="<%= car.pricePerKm %>" data-fkm="<%= fkm %>" data-fp="<%= fp %>" data-ekc="<%= car.extraKmCharge %>">
             <i class="fas fa-calendar-check"></i> Book Now
           </button>
         </div>
       </div>
-      <% }) } %>
+      <% }); } %>
     </div>
   </div>
 </section>
 
-<!-- WHY US -->
+<!-- Why Us -->
 <section class="section why-section" id="why-us">
   <div class="container">
     <div class="section-header">
@@ -158,7 +159,7 @@
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
+<!-- Testimonials -->
 <section class="section testimonials-section" id="testimonials">
   <div class="container">
     <div class="section-header">
@@ -166,41 +167,32 @@
       <h2 class="section-title">Real Reviews From Real Travellers</h2>
       <p>Honest feedback from customers who travelled with us. Every review is verified.</p>
     </div>
-
-    <!-- Testimonials grid -->
-    <div class="testi-grid" id="testiGrid">
-      <% if(!testimonials || !testimonials.length){ %>
+    <div class="testi-grid">
+      <% if(!testimonials||!testimonials.length){ %>
       <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">
         <i class="fas fa-comment-slash" style="font-size:36px;color:var(--border);display:block;margin-bottom:12px"></i>
         <p>No reviews yet. Be the first to share your experience!</p>
       </div>
-      <% } else { testimonials.forEach(t => { %>
+      <% } else { testimonials.forEach(function(t){ %>
       <div class="testi-card">
-        <div class="testi-stars">
-          <% for(let i=1;i<=5;i++){ %><i class="fas fa-star" style="color:<%= i<=t.rating ? '#F59E0B' : '#E8DDD0' %>"></i><% } %>
-        </div>
+        <div class="testi-stars"><% for(var i=1;i<=5;i++){ %><i class="fas fa-star" style="color:<%= i<=t.rating?'#F59E0B':'#E8DDD0' %>"></i><% } %></div>
         <p class="testi-msg">"<%= t.message %>"</p>
         <div class="testi-author">
           <div class="testi-avatar"><%= t.name.charAt(0).toUpperCase() %></div>
-          <div>
-            <div class="testi-name"><%= t.name %></div>
-            <div class="testi-date"><%= new Date(t.createdAt).toLocaleDateString('en-IN',{month:'short',year:'numeric'}) %></div>
-          </div>
+          <div><div class="testi-name"><%= t.name %></div><div class="testi-date"><%= new Date(t.createdAt).toLocaleDateString('en-IN',{month:'short',year:'numeric'}) %></div></div>
         </div>
       </div>
-      <% }) } %>
+      <% }); } %>
     </div>
-
-    <!-- Leave a review button -->
     <div style="text-align:center;margin-top:36px">
-      <button class="btn-primary" onclick="openFeedback()" style="display:inline-flex">
+      <button id="openFeedbackBtn" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px">
         <i class="fas fa-star"></i> Share Your Experience
       </button>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
+<!-- Contact -->
 <section class="contact-section section" id="contact">
   <div class="container">
     <div class="contact-grid">
@@ -239,12 +231,8 @@
     </div>
     <div class="footer-links">
       <h4>Quick Links</h4>
-      <a href="#cars">Our Fleet</a>
-      <a href="#why-us">Why Us</a>
-      <a href="#testimonials">Reviews</a>
-      <a href="/track">Track Booking</a>
-      <a href="/partner">Partner With Us</a>
-      <a href="#contact">Contact</a>
+      <a href="#cars">Our Fleet</a><a href="#why-us">Why Us</a><a href="#testimonials">Reviews</a>
+      <a href="/track">Track Booking</a><a href="/partner">Partner With Us</a><a href="#contact">Contact</a>
     </div>
     <div class="footer-contact">
       <h4>Contact</h4>
@@ -257,683 +245,576 @@
 </footer>
 
 <!-- Floating WhatsApp -->
-<a href="https://wa.me/919411061000" class="float-wa" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/919411061000" class="float-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
-<!-- ════════════════════ CHAT WIDGET ════════════════════ -->
-<div class="chat-float" id="chatFloat">
-  <button class="chat-btn" id="chatToggle" title="Live chat with us">
+<!-- ═══ CHAT WIDGET ═══ -->
+<div class="chat-float" id="chatFloat" style="position:fixed;bottom:90px;left:20px;z-index:99991;pointer-events:auto">
+  <button id="chatBtn" style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#1a56db,#0e3eb3);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(26,86,219,.4);pointer-events:auto">
     <i class="fas fa-comment-dots"></i>
-    <div class="chat-notif" id="chatNotif">!</div>
   </button>
 </div>
-
-<div class="chat-window" id="chatWindow">
-  <div class="chat-head">
-    <div><h4><i class="fas fa-headset" style="margin-right:5px"></i>Live Support</h4><p><span class="online-dot"></span>Brajwasi Tour & Travels · Fast replies</p></div>
-    <button class="chat-close" id="chatCloseBtn"><i class="fas fa-times"></i></button>
+<div id="chatWindow" style="position:fixed;bottom:158px;left:20px;width:340px;background:#fff;border:1px solid #E8DDD0;border-radius:18px;box-shadow:0 16px 50px rgba(26,18,8,.18);z-index:99992;display:none;flex-direction:column;overflow:hidden;max-height:520px">
+  <div style="background:linear-gradient(135deg,#1a56db,#0e3eb3);padding:14px 18px;display:flex;justify-content:space-between;align-items:center">
+    <div><div style="color:#fff;font-size:14px;font-weight:700"><i class="fas fa-headset" style="margin-right:5px"></i>Live Support</div><div style="color:rgba(255,255,255,.75);font-size:11px;margin-top:2px"><span style="width:8px;height:8px;background:#4ade80;border-radius:50%;display:inline-block;margin-right:4px"></span>Brajwasi · Fast replies</div></div>
+    <button id="chatCloseBtn" style="background:none;border:none;color:rgba(255,255,255,.8);cursor:pointer;font-size:16px"><i class="fas fa-times"></i></button>
   </div>
-  <div id="chatSetup" class="chat-setup">
-    <p>Enter your details to start chatting with us.</p>
-    <input type="text" id="chatNameIn" placeholder="Your Name *" autocomplete="name">
-    <input type="tel" id="chatPhoneIn" placeholder="Your Phone Number *" autocomplete="tel">
-    <button id="chatStartBtn"><i class="fas fa-comment"></i> Start Chat</button>
+  <div id="chatSetup" style="padding:20px;background:#fff">
+    <p style="color:#7A6A55;font-size:12px;margin-bottom:14px">Enter your details to chat with us.</p>
+    <input type="text" id="chatNameIn" placeholder="Your Name *" style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit">
+    <input type="tel" id="chatPhoneIn" placeholder="Your Phone *" style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:10px;outline:none;font-family:inherit">
+    <button id="chatStartBtn" style="width:100%;padding:11px;background:linear-gradient(135deg,#1a56db,#0e3eb3);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit"><i class="fas fa-comment"></i> Start Chat</button>
   </div>
   <div id="chatBody" style="display:none;flex-direction:column;flex:1;overflow:hidden">
-    <div class="chat-msgs" id="chatMsgs">
-      <div class="chat-empty" id="chatEmpty"><i class="fas fa-comment-slash" style="font-size:26px;display:block;margin-bottom:8px;color:#ccc"></i>No messages yet. Say hello!</div>
+    <div id="chatMsgs" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;min-height:200px;background:#F8F5F0">
+      <div id="chatEmpty" style="text-align:center;color:#A0917E;font-size:13px;padding:20px"><i class="fas fa-comment-slash" style="font-size:24px;display:block;margin-bottom:8px;color:#ccc"></i>No messages yet. Say hello!</div>
     </div>
-    <div class="chat-input-row">
-      <input type="text" id="chatIn" placeholder="Type a message...">
-      <button id="chatSendBtn"><i class="fas fa-paper-plane"></i></button>
+    <div style="display:flex;gap:8px;padding:12px;border-top:1px solid #E8DDD0;background:#fff">
+      <input type="text" id="chatIn" placeholder="Type a message..." style="flex:1;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:9px 13px;border-radius:20px;font-size:13px;outline:none;font-family:inherit">
+      <button id="chatSendBtn" style="width:36px;height:36px;background:linear-gradient(135deg,#1a56db,#0e3eb3);border:none;border-radius:50%;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-paper-plane"></i></button>
     </div>
   </div>
 </div>
 
-<!-- BOOK NOW MODAL -->
-<div class="modal-overlay" id="bookingModal">
-  <div class="modal">
-    <button class="modal-close" id="closeBookingBtn"><i class="fas fa-times"></i></button>
-    <div class="modal-header"><h2>Book Your Ride</h2><p id="modalCarName"></p></div>
-    <div class="price-calc">
-      <div class="calc-row">
-        <label><i class="fas fa-road" style="color:var(--gold);margin-right:5px"></i>Estimated Distance (km) <span style="color:var(--red)">*</span></label>
-        <input type="number" id="estKm" placeholder="Enter KM *" min="1" required>
+<!-- ═══ BOOKING MODAL ═══ -->
+<div id="bookingModal" style="position:fixed;inset:0;background:rgba(26,18,8,.6);backdrop-filter:blur(6px);z-index:10000;display:none;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border:1px solid #E8DDD0;border-radius:20px;padding:30px;width:100%;max-width:620px;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 24px 80px rgba(26,18,8,.3)">
+    <button id="closeBookingBtn" style="position:absolute;top:16px;right:16px;background:#F0EBE3;border:1px solid #E8DDD0;color:#7A6A55;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px"><i class="fas fa-times"></i></button>
+    <div style="margin-bottom:20px"><h2 style="font-family:'Playfair Display',serif;font-size:24px;color:#1A1208">Book Your Ride</h2><p id="modalCarName" style="font-size:14px;color:#B8780A;margin-top:4px;font-weight:600"></p></div>
+    <div style="background:#FFF8EC;border:1px solid rgba(184,120,10,.2);border-radius:12px;padding:16px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <label style="font-size:13px;color:#7A6A55;white-space:nowrap;font-weight:600"><i class="fas fa-road" style="color:#B8780A;margin-right:5px"></i>Distance (km) <span style="color:#C0392B">*</span></label>
+        <input type="number" id="estKm" placeholder="Enter KM" min="1" required style="flex:1;background:#fff;border:1px solid #E8DDD0;color:#1A1208;padding:9px 12px;border-radius:8px;font-size:14px;outline:none;font-family:inherit">
       </div>
-      <div class="calc-result" id="calcResult" style="display:none">
-        <div class="calc-breakdown" id="calcBreakdown"></div>
-        <div class="calc-total" id="calcTotal"></div>
+      <div id="calcResult" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(184,120,10,.15)">
+        <div id="calcBreakdown" style="font-size:13px;color:#7A6A55;margin-bottom:6px"></div>
+        <div id="calcTotal" style="font-size:18px;font-weight:700;color:#1A7A3A"></div>
       </div>
     </div>
-    <div class="adv-notice">
-      <div class="adv-icon"><i class="fas fa-shield-alt"></i></div>
-      <div><h4>₹500 Refundable Advance Required</h4><p>Fully refundable if car doesn't arrive or you cancel before departure.</p></div>
+    <div style="background:#FFF8EC;border:1px solid rgba(184,120,10,.25);border-radius:12px;padding:14px 16px;margin-bottom:18px;display:flex;gap:12px;align-items:flex-start">
+      <div style="width:36px;height:36px;min-width:36px;background:#FEF3DC;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#B8780A;font-size:15px"><i class="fas fa-shield-alt"></i></div>
+      <div><div style="color:#8A5A06;margin-bottom:3px;font-size:13px;font-weight:700">₹500 Refundable Advance Required</div><p style="color:#7A6A55;font-size:12px;line-height:1.5;margin:0">Fully refundable if car doesn't arrive or you cancel before departure.</p></div>
     </div>
     <form id="bookingForm">
       <input type="hidden" id="bookCarId">
-      <div class="form-row">
-        <div class="form-group"><label>Your Name *</label><input type="text" id="bkName" required></div>
-        <div class="form-group"><label>Phone *</label><input type="tel" id="bkPhone" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="margin-bottom:0"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Your Name *</label><input type="text" id="bkName" placeholder="Full name" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
+        <div style="margin-bottom:0"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Phone *</label><input type="tel" id="bkPhone" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
       </div>
-      <div class="form-group"><label>Email (optional)</label><input type="email" id="bkEmail"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Pickup Location *</label><input type="text" id="bkPickup" placeholder="From where?" required></div>
-        <div class="form-group"><label>Drop Location *</label><input type="text" id="bkDrop" placeholder="Where to?" required></div>
+      <div style="margin-top:14px;margin-bottom:14px"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Email (auto-filled after login)</label><input type="email" id="bkEmail" placeholder="Logged-in email" readonly style="width:100%;background:#F0EBE3;border:1px solid #E8DDD0;color:#7A6A55;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px">
+        <div><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Pickup *</label><input type="text" id="bkPickup" placeholder="From where?" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
+        <div><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Drop *</label><input type="text" id="bkDrop" placeholder="Where to?" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
       </div>
-      <div class="form-row">
-        <div class="form-group"><label>Journey Date *</label><input type="date" id="bkDate" required></div>
-        <div class="form-group"><label>Journey Time *</label><input type="time" id="bkTime" required></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px">
+        <div><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Date *</label><input type="date" id="bkDate" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
+        <div><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Time *</label><input type="time" id="bkTime" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
       </div>
-      <div class="form-group"><label>Special Instructions</label><textarea id="bkNotes" rows="2"></textarea></div>
-      <button type="submit" class="btn-primary full-btn" id="bookSubmitBtn"><i class="fas fa-check-circle"></i> Confirm Booking</button>
+      <div style="margin-bottom:16px"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Notes (optional)</label><textarea id="bkNotes" rows="2" style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:none"></textarea></div>
+      <button type="submit" id="bookSubmitBtn" style="width:100%;padding:14px;background:linear-gradient(135deg,#D4920E,#8A5A06);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit"><i class="fas fa-check-circle"></i> Confirm Booking</button>
     </form>
   </div>
 </div>
 
-<!-- PAYMENT MODAL -->
-<div class="modal-overlay" id="paymentModal">
-  <div class="modal" style="max-width:460px">
-    <button class="modal-close" id="closePayBtn"><i class="fas fa-times"></i></button>
-    <div class="modal-header"><h2>Pay ₹500 Advance</h2><p id="payBookingId"></p></div>
-    <div class="upi-section">
-      <h4><i class="fas fa-mobile-alt" style="color:var(--gold);margin-right:6px"></i>Pay via UPI App</h4>
-      <p>Tap an app below to open it directly and pay ₹500.</p>
-      <div class="upi-apps">
-        <a class="upi-app" id="upiPhonePe" href="#">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PhonePe_Logo.png/120px-PhonePe_Logo.png" alt="PhonePe" onerror="this.style.display='none'">
-          <span>PhonePe</span>
-        </a>
-        <a class="upi-app" id="upiGPay" href="#">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/120px-Google_Pay_Logo.svg.png" alt="GPay" onerror="this.style.display='none'">
-          <span>Google Pay</span>
-        </a>
-        <a class="upi-app" id="upiPaytm" href="#">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/120px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm" onerror="this.style.display='none'">
-          <span>Paytm</span>
-        </a>
+<!-- ═══ PAYMENT MODAL ═══ -->
+<div id="paymentModal" style="position:fixed;inset:0;background:rgba(26,18,8,.6);backdrop-filter:blur(6px);z-index:10000;display:none;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border:1px solid #E8DDD0;border-radius:20px;padding:28px;width:100%;max-width:460px;max-height:92vh;overflow-y:auto;position:relative">
+    <button id="closePayBtn" style="position:absolute;top:16px;right:16px;background:#F0EBE3;border:1px solid #E8DDD0;color:#7A6A55;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px"><i class="fas fa-times"></i></button>
+    <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:#1A1208;margin-bottom:4px">Pay ₹500 Advance</h2>
+    <p id="payBookingId" style="font-size:13px;color:#B8780A;font-weight:600;margin-bottom:18px"></p>
+    <div style="background:#F8F5F0;border:1px solid #E8DDD0;border-radius:14px;padding:18px;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:700;color:#1A1208;margin-bottom:4px"><i class="fas fa-mobile-alt" style="color:#B8780A;margin-right:6px"></i>Pay via UPI App</div>
+      <p style="font-size:12px;color:#7A6A55;margin-bottom:14px">Tap your payment app to open and pay ₹500 directly.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">
+        <button id="upiPhonePe" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:11px 8px;border-radius:12px;border:1.5px solid #E8DDD0;background:#fff;cursor:pointer;font-size:11px;font-weight:700;color:#1A1208;font-family:inherit;transition:all .2s">📱<span>PhonePe</span></button>
+        <button id="upiGPay" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:11px 8px;border-radius:12px;border:1.5px solid #E8DDD0;background:#fff;cursor:pointer;font-size:11px;font-weight:700;color:#1A1208;font-family:inherit;transition:all .2s">💳<span>Google Pay</span></button>
+        <button id="upiPaytm" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:11px 8px;border-radius:12px;border:1.5px solid #E8DDD0;background:#fff;cursor:pointer;font-size:11px;font-weight:700;color:#1A1208;font-family:inherit;transition:all .2s">💰<span>Paytm</span></button>
       </div>
-      <button class="upi-any" id="upiAnyBtn"><i class="fas fa-university"></i> Open Any UPI App</button>
-      <div class="upi-qr" id="upiQrWrap">
-        <p><i class="fas fa-qrcode" style="margin-right:5px"></i>Scan with any UPI app (desktop)</p>
-        <canvas id="upiQR" width="176" height="176"></canvas>
-        <p class="upi-id-txt" id="upiIdTxt"></p>
+      <button id="upiAnyBtn" style="width:100%;padding:12px;background:linear-gradient(135deg,#D4920E,#8A5A06);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;font-family:inherit"><i class="fas fa-university"></i> Open Any UPI App</button>
+      <div id="upiQrWrap" style="text-align:center;border-top:1px solid #E8DDD0;padding-top:14px">
+        <p style="font-size:12px;color:#7A6A55;margin-bottom:10px"><i class="fas fa-qrcode" style="margin-right:5px"></i>Scan with any UPI app</p>
+        <canvas id="upiQR" width="176" height="176" style="border-radius:10px;border:1px solid #E8DDD0"></canvas>
+        <p id="upiIdTxt" style="font-family:monospace;font-size:12px;color:#7A6A55;margin-top:6px"></p>
       </div>
     </div>
-    <button class="paid-btn" id="paidBtn"><i class="fas fa-check-circle"></i> I've Paid – Confirm Booking</button>
-    <p style="text-align:center;font-size:11px;color:var(--light);margin-top:10px">100% refundable if car doesn't arrive or you cancel before it departs.</p>
+    <button id="paidBtn" style="width:100%;padding:12px;background:#EAF7EE;color:#1A7A3A;border:1.5px solid #1A7A3A;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;margin-bottom:10px"><i class="fas fa-check-circle"></i> I've Paid – Confirm Booking</button>
+    <p style="text-align:center;font-size:11px;color:#A0917E">100% refundable if car doesn't arrive or you cancel before it departs.</p>
   </div>
 </div>
 
-<!-- SUCCESS MODAL -->
-<div class="modal-overlay" id="successModal">
-  <div class="modal success-modal" style="max-width:460px">
-    <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-    <h2>Booking Confirmed!</h2>
-    <div class="booking-id-pill" id="successBookingId"></div>
-    <p style="font-size:12px;color:var(--light);margin-bottom:16px">Save this ID to track your booking</p>
-    <p style="margin-bottom:16px">Our team will call you shortly. Track your booking & driver location anytime.</p>
-    <a id="trackLink" href="/track" class="track-btn"><i class="fas fa-map-marker-alt"></i> Track My Booking</a>
-    <a href="https://wa.me/919411061000" target="_blank" class="btn-primary" style="display:inline-flex;margin-top:10px"><i class="fab fa-whatsapp"></i> Share on WhatsApp</a>
-    <button id="closeSuccessBtn" style="display:block;width:100%;padding:11px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);color:var(--muted);cursor:pointer;font-size:14px;font-weight:600;margin-top:8px;font-family:inherit">Close</button>
+<!-- ═══ SUCCESS MODAL ═══ -->
+<div id="successModal" style="position:fixed;inset:0;background:rgba(26,18,8,.6);backdrop-filter:blur(6px);z-index:10000;display:none;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border:1px solid #E8DDD0;border-radius:20px;padding:32px;width:100%;max-width:460px;text-align:center;position:relative">
+    <div style="font-size:56px;color:#1A7A3A;margin-bottom:16px">✅</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:26px;margin-bottom:12px;color:#1A1208">Booking Confirmed!</h2>
+    <div id="successBookingId" style="display:inline-block;background:#FFF8EC;border:2px solid #B8780A;color:#8A5A06;font-size:20px;font-weight:800;padding:10px 24px;border-radius:10px;letter-spacing:3px;margin:8px 0 14px;font-family:monospace"></div>
+    <p style="font-size:12px;color:#A0917E;margin-bottom:16px">Save this ID to track your booking</p>
+    <p style="margin-bottom:16px;color:#7A6A55">Our team will call you shortly.</p>
+    <a id="trackLink" href="/track" style="display:inline-flex;align-items:center;gap:6px;background:#EEF4FF;color:#1A5DAB;border:1px solid rgba(26,93,171,.2);padding:10px 20px;border-radius:30px;font-size:13px;font-weight:700;text-decoration:none;margin-bottom:10px"><i class="fas fa-map-marker-alt"></i> Track My Booking</a><br>
+    <a href="https://wa.me/919411061000" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#D4920E,#8A5A06);color:#fff;padding:11px 22px;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px;margin-bottom:8px"><i class="fab fa-whatsapp"></i> Share on WhatsApp</a><br>
+    <button id="closeSuccessBtn" style="padding:11px 28px;background:#F8F5F0;border:1px solid #E8DDD0;border-radius:10px;color:#7A6A55;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;margin-top:6px">Close</button>
   </div>
 </div>
 
+<!-- ═══ FEEDBACK MODAL ═══ -->
+<div id="feedbackModal" style="position:fixed;inset:0;background:rgba(26,18,8,.6);backdrop-filter:blur(6px);z-index:10000;display:none;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border:1px solid #E8DDD0;border-radius:20px;padding:30px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;position:relative">
+    <button id="closeFeedbackBtn" style="position:absolute;top:16px;right:16px;background:#F0EBE3;border:1px solid #E8DDD0;color:#7A6A55;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px"><i class="fas fa-times"></i></button>
+    <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:#1A1208;margin-bottom:4px"><i class="fas fa-star" style="color:#B8780A;margin-right:8px"></i>Share Your Experience</h2>
+    <p style="font-size:13px;color:#7A6A55;margin-bottom:20px">Your review helps other travellers choose wisely</p>
+    <form id="feedbackForm">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px">
+        <div><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Name *</label><input type="text" id="fbName" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
+        <div><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Phone *</label><input type="tel" id="fbPhone" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:8px;font-weight:700;text-transform:uppercase">Rating *</label>
+        <div class="star-picker" id="starPicker">
+          <i class="fas fa-star" data-val="1"></i><i class="fas fa-star" data-val="2"></i><i class="fas fa-star" data-val="3"></i><i class="fas fa-star" data-val="4"></i><i class="fas fa-star" data-val="5"></i>
+        </div>
+        <input type="hidden" id="fbRating" value="0">
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Your Review *</label>
+        <textarea id="fbMsg" rows="4" placeholder="Tell us about your experience..." required maxlength="500" style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none;resize:none"></textarea>
+        <div style="text-align:right;font-size:11px;color:#A0917E" id="fbCharCount">0 / 500</div>
+      </div>
+      <button type="submit" id="fbSubmitBtn" style="width:100%;padding:13px;background:linear-gradient(135deg,#D4920E,#8A5A06);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit"><i class="fas fa-paper-plane"></i> Submit Review</button>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ LOGIN MODAL (OTP) ═══ -->
+<div id="loginModal" style="position:fixed;inset:0;background:rgba(26,18,8,.6);backdrop-filter:blur(6px);z-index:10001;display:none;align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fff;border:1px solid #E8DDD0;border-radius:20px;padding:30px;width:100%;max-width:440px;position:relative">
+    <button id="closeLoginBtn" style="position:absolute;top:16px;right:16px;background:#F0EBE3;border:1px solid #E8DDD0;color:#7A6A55;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px"><i class="fas fa-times"></i></button>
+    <h2 style="font-family:'Playfair Display',serif;font-size:22px;color:#1A1208;margin-bottom:4px"><i class="fas fa-lock" style="color:#B8780A;margin-right:8px"></i>Login to Book</h2>
+    <p style="font-size:13px;color:#7A6A55;margin-bottom:18px">Enter your email to receive a one-time password</p>
+    <div id="otpAlert"></div>
+    <div id="otpStep1">
+      <div style="margin-bottom:12px"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Your Name</label><input type="text" id="otpNameIn" placeholder="Full name (optional)" style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
+      <div style="margin-bottom:16px"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Email Address *</label><input type="email" id="otpEmailIn" placeholder="you@example.com" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
+      <button id="sendOtpBtn" style="width:100%;padding:13px;background:linear-gradient(135deg,#D4920E,#8A5A06);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;margin-bottom:10px"><i class="fas fa-paper-plane"></i> Send OTP to Email</button>
+      <p style="text-align:center;font-size:12px;color:#A0917E">A 6-digit code will be sent to your email. No password needed.</p>
+    </div>
+    <div id="otpStep2" style="display:none">
+      <div style="background:#FFF8EC;border:1px solid rgba(184,120,10,.2);border-radius:10px;padding:14px;margin-bottom:14px;text-align:center"><p style="font-size:13px;color:#7A6A55">OTP sent to <strong id="otpEmailDisplay"></strong></p></div>
+      <div style="margin-bottom:14px"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Enter OTP *</label><input type="text" id="otpCodeIn" placeholder="e.g. 482916" maxlength="6" style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:12px;border-radius:10px;font-size:24px;font-weight:800;letter-spacing:10px;text-align:center;font-family:inherit;outline:none"></div>
+      <button id="verifyOtpBtn" style="width:100%;padding:13px;background:linear-gradient(135deg,#D4920E,#8A5A06);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;margin-bottom:10px"><i class="fas fa-check"></i> Verify & Login</button>
+      <button onclick="document.getElementById('otpStep1').style.display='block';document.getElementById('otpStep2').style.display='none'" style="width:100%;padding:10px;background:none;border:1px solid #E8DDD0;border-radius:10px;color:#7A6A55;cursor:pointer;font-size:13px;font-family:inherit">← Use different email</button>
+    </div>
+  </div>
+</div>
+
+<!-- QR code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <script>
-// ═══════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════
-var carData={},currentBookingId=null,payData=null;
-var chatPhone=localStorage.getItem('bt_phone')||'';
-var chatName=localStorage.getItem('bt_name')||'';
-var lastMsgTs=null,chatPoll=null;
-var customerSession=null;
-var fbRating=0;
+// ═══════════════════════════════════════════════════════════
+// BRAJWASI TRAVELS - MAIN JS
+// ALL code runs inline after HTML is parsed (script at bottom of body)
+// NO DOMContentLoaded needed - DOM is already ready here
+// ═══════════════════════════════════════════════════════════
 
-// ═══════════════════════════════════════════════
-//  BOOT — runs after full DOM ready
-// ═══════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('heroBg')&&document.getElementById('heroBg').classList.add('loaded');
-  initPush();
-  wireChat();
-  wireModals();
-  wireBookingForm();
-  wirePayBtn();
-  wireEnquiry();
-  // wireFeedback runs after a tiny delay to ensure feedbackModal DOM exists
-  setTimeout(wireFeedback, 0);
-  checkSession();
+// ── State ──────────────────────────────────────────────────
+var _carData = {}, _bookingId = null, _payData = null;
+var _chatPhone = localStorage.getItem('bt_phone') || '';
+var _chatName  = localStorage.getItem('bt_name')  || '';
+var _lastMsgTs = null, _chatPoll = null;
+var _session   = null;
+var _fbRating  = 0;
+
+// ── Scroll ─────────────────────────────────────────────────
+window.addEventListener('scroll', function() {
+  var h = document.getElementById('header');
+  if (h) h.classList.toggle('scrolled', window.scrollY > 50);
 });
-window.addEventListener('scroll',function(){
-  var h=document.getElementById('header');
-  if(h) h.classList.toggle('scrolled',window.scrollY>50);
-});
+document.getElementById('heroBg') && document.getElementById('heroBg').classList.add('loaded');
 
-// ═══════════════════════════════════════════════
-//  CUSTOMER SESSION
-// ═══════════════════════════════════════════════
-function checkSession(){
-  fetch('/api/auth/me',{credentials:'include'}).then(function(r){return r.json();}).then(function(d){
-    if(d.loggedIn){customerSession=d;renderLoginBar(d);}
-  }).catch(function(){});
-}
-function renderLoginBar(user){
-  var bar=document.getElementById('loginBar');
-  if(!bar)return;
-  if(user){
-    bar.innerHTML='<span style="font-size:13px;color:var(--muted)"><i class="fas fa-user-circle" style="color:var(--gold);margin-right:5px"></i>'+esc(user.name)+'</span> <button onclick="logoutCustomer()" style="background:none;border:1px solid var(--border);color:var(--muted);padding:5px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;margin-left:8px">Logout</button>';
-  }else{
-    bar.innerHTML='<button onclick="openLoginModal()" style="display:inline-flex;align-items:center;gap:6px;background:var(--gold-bg);border:1px solid rgba(184,120,10,.3);color:var(--gold-d);padding:7px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit"><i class="fas fa-user-circle"></i>Login to Book</button>';
-  }
-}
-function logoutCustomer(){
-  fetch('/api/auth/logout',{method:'POST',credentials:'include'}).then(function(){customerSession=null;renderLoginBar(null);toast('Logged out','success');});
-}
-
-// ═══════════════════════════════════════════════
-//  PUSH NOTIFICATIONS
-// ═══════════════════════════════════════════════
-function initPush(){
-  if(!('serviceWorker'in navigator)||!('PushManager'in window))return;
-  navigator.serviceWorker.register('/sw.js').then(function(){
-    if(Notification.permission==='default'){
-      setTimeout(function(){
-        var nb=document.getElementById('notif-bar');
-        if(nb)nb.style.display='flex';
-      },5000);
+// ── Push Notifications ─────────────────────────────────────
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+  navigator.serviceWorker.register('/sw.js').then(function() {
+    if (Notification.permission === 'default') {
+      setTimeout(function() {
+        var nb = document.getElementById('notif-bar');
+        if (nb) nb.style.display = 'flex';
+      }, 5000);
     }
-  }).catch(function(){});
+  }).catch(function() {});
 }
-function requestPush(){
-  var nb=document.getElementById('notif-bar');
-  if(nb)nb.style.display='none';
-  Notification.requestPermission().then(function(p){
-    if(p!=='granted')return;
-    navigator.serviceWorker.ready.then(function(reg){
-      fetch('/vapid-public-key').then(function(r){return r.json();}).then(function(d){
-        if(!d.publicKey)return;
-        reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToUint8(d.publicKey)}).then(function(sub){
-          var sd=JSON.parse(JSON.stringify(sub));
-          sd.role='customer'; sd.phone=chatPhone||'';
-          fetch('/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(sd)});
-          toast('Notifications enabled!','success');
+function requestPush() {
+  var nb = document.getElementById('notif-bar');
+  if (nb) nb.style.display = 'none';
+  Notification.requestPermission().then(function(p) {
+    if (p !== 'granted') return;
+    navigator.serviceWorker.ready.then(function(reg) {
+      fetch('/vapid-public-key').then(function(r) { return r.json(); }).then(function(d) {
+        if (!d.publicKey) return;
+        var pad = '='.repeat((4 - d.publicKey.length % 4) % 4);
+        var raw = atob((d.publicKey + pad).replace(/-/g, '+').replace(/_/g, '/'));
+        var key = Uint8Array.from(raw, function(c) { return c.charCodeAt(0); });
+        reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key }).then(function(sub) {
+          var sd = JSON.parse(JSON.stringify(sub));
+          sd.role = 'customer'; sd.phone = _chatPhone || '';
+          fetch('/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sd) });
+          showToast('Notifications enabled!', 'success');
         });
       });
     });
   });
 }
-function resubWithPhone(phone){
-  if(!('serviceWorker'in navigator)||Notification.permission!=='granted')return;
-  navigator.serviceWorker.ready.then(function(reg){
-    reg.pushManager.getSubscription().then(function(sub){
-      if(!sub)return;
-      var sd=JSON.parse(JSON.stringify(sub));
-      sd.role='customer'; sd.phone=phone;
-      fetch('/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(sd)});
+function _resubPhone(phone) {
+  if (!('serviceWorker' in navigator) || Notification.permission !== 'granted') return;
+  navigator.serviceWorker.ready.then(function(reg) {
+    reg.pushManager.getSubscription().then(function(sub) {
+      if (!sub) return;
+      var sd = JSON.parse(JSON.stringify(sub));
+      sd.role = 'customer'; sd.phone = phone;
+      fetch('/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sd) });
     });
   });
 }
-function b64ToUint8(b){
-  var pad='='.repeat((4-b.length%4)%4);
-  var raw=atob((b+pad).replace(/-/g,'+').replace(/_/g,'/'));
-  return Uint8Array.from(raw,function(c){return c.charCodeAt(0);});
+
+// ── Modal helpers ──────────────────────────────────────────
+function showModal(id) {
+  var el = document.getElementById(id);
+  if (el) { el.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+}
+function hideModal(id) {
+  var el = document.getElementById(id);
+  if (el) { el.style.display = 'none'; document.body.style.overflow = ''; }
+}
+// Overlay click to close
+['bookingModal','paymentModal','successModal','feedbackModal','loginModal'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('click', function(e) { if (e.target === el) hideModal(id); });
+});
+// Close buttons
+document.getElementById('closeBookingBtn').addEventListener('click', function() { hideModal('bookingModal'); });
+document.getElementById('closePayBtn').addEventListener('click', function() { hideModal('paymentModal'); });
+document.getElementById('closeSuccessBtn').addEventListener('click', function() { hideModal('successModal'); });
+document.getElementById('closeFeedbackBtn').addEventListener('click', function() { hideModal('feedbackModal'); });
+document.getElementById('closeLoginBtn').addEventListener('click', function() { hideModal('loginModal'); });
+
+// ── BOOK NOW buttons (data-* attributes, no inline JS needed) ─
+document.querySelectorAll('.book-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var d = btn.dataset;
+    openBooking(d.carid, d.model, +d.ppk, +d.fkm, +d.fp, +d.ekc);
+  });
+});
+function openBooking(id, model, ppk, fkm, fp, ekc) {
+  _carData = { id: id, model: model, ppk: ppk, fkm: fkm, fp: fp, ekc: ekc };
+  document.getElementById('bookCarId').value = id;
+  document.getElementById('modalCarName').textContent = model;
+  document.getElementById('estKm').value = '';
+  document.getElementById('calcResult').style.display = 'none';
+  document.getElementById('bkDate').min = new Date().toISOString().split('T')[0];
+  if (_session) {
+    document.getElementById('bkEmail').value = _session.email;
+    if (!document.getElementById('bkName').value) document.getElementById('bkName').value = _session.name || '';
+  }
+  showModal('bookingModal');
 }
 
-// ═══════════════════════════════════════════════
-//  CHAT
-// ═══════════════════════════════════════════════
-function wireChat(){
-  var toggle=document.getElementById('chatToggle');
-  var closeB=document.getElementById('chatCloseBtn');
-  var startB=document.getElementById('chatStartBtn');
-  var sendB=document.getElementById('chatSendBtn');
-  var inp=document.getElementById('chatIn');
-  if(!toggle){return;}
-  toggle.addEventListener('click',function(){toggleChat();});
-  if(closeB)closeB.addEventListener('click',function(){toggleChat();});
-  if(startB)startB.addEventListener('click',startChat);
-  if(sendB)sendB.addEventListener('click',sendChatMsg);
-  if(inp)inp.addEventListener('keypress',function(e){if(e.key==='Enter')sendChatMsg();});
-  if(chatPhone){
-    var ni=document.getElementById('chatNameIn'),pi=document.getElementById('chatPhoneIn');
-    if(ni)ni.value=chatName; if(pi)pi.value=chatPhone;
+// ── Price calculator ───────────────────────────────────────
+document.getElementById('estKm').addEventListener('input', function() {
+  var km = parseInt(this.value);
+  var d = _carData;
+  if (!km || km <= 0) { document.getElementById('calcResult').style.display = 'none'; return; }
+  var total = 0, bd = '';
+  if (d.fkm && d.fp && km <= d.fkm) { total = d.fp; bd = 'Fixed ' + d.fkm + 'km Package'; }
+  else if (d.fkm && d.fp) { var ex = km - d.fkm; total = d.fp + ex * d.ekc; bd = d.fkm + 'km: \u20b9' + d.fp + ' + Extra ' + ex + 'km \u00d7 \u20b9' + d.ekc; }
+  else { total = km * d.ppk; bd = km + 'km \u00d7 \u20b9' + d.ppk + '/km'; }
+  document.getElementById('calcBreakdown').textContent = bd;
+  document.getElementById('calcTotal').textContent = 'Estimated Fare: \u20b9' + total.toLocaleString('en-IN') + ' (excl. toll)';
+  document.getElementById('calcResult').style.display = 'block';
+});
+
+// ── Booking form submit ────────────────────────────────────
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var km = document.getElementById('estKm').value;
+  if (!km || +km < 1) { showToast('Please enter estimated distance in KM', 'error'); document.getElementById('estKm').focus(); return; }
+  if (!_session) { showModal('loginModal'); return; }
+  var btn = document.getElementById('bookSubmitBtn');
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; btn.disabled = true;
+  fetch('/api/book', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      carId: document.getElementById('bookCarId').value,
+      customerName: document.getElementById('bkName').value,
+      customerPhone: document.getElementById('bkPhone').value,
+      pickupLocation: document.getElementById('bkPickup').value,
+      dropLocation: document.getElementById('bkDrop').value,
+      journeyDate: document.getElementById('bkDate').value,
+      journeyTime: document.getElementById('bkTime').value,
+      estimatedKm: km,
+      notes: document.getElementById('bkNotes').value
+    })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      _bookingId = d.bookingId;
+      hideModal('bookingModal');
+      document.getElementById('bookingForm').reset();
+      openPayModal(d.bookingId);
+    } else if (d.loginRequired) {
+      showModal('loginModal');
+    } else {
+      showToast(d.error || 'Booking failed. Call 9411061000', 'error');
+    }
+  }).catch(function() { showToast('Network error. Call 9411061000', 'error'); })
+  .finally(function() { btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm Booking'; btn.disabled = false; });
+});
+
+// ── Payment ────────────────────────────────────────────────
+function openPayModal(bookingId) {
+  document.getElementById('payBookingId').textContent = 'Booking ID: ' + bookingId;
+  fetch('/api/payment/' + bookingId).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.error) { showSuccessModal(bookingId); return; }
+    _payData = d;
+    document.getElementById('upiIdTxt').textContent = 'UPI: ' + d.upiId;
+    document.getElementById('upiPhonePe').onclick = function() { window.location.href = d.phonepe; };
+    document.getElementById('upiGPay').onclick    = function() { window.location.href = d.gpay; };
+    document.getElementById('upiPaytm').onclick   = function() { window.location.href = d.paytm; };
+    document.getElementById('upiAnyBtn').onclick  = function() { window.location.href = d.upiUrl; };
+    setTimeout(function() { showToast('If app did not open, try another or scan QR', 'info'); }, 2000);
+    var isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+    document.getElementById('upiQrWrap').style.display = isMobile ? 'none' : 'block';
+    if (!isMobile && window.QRCode) {
+      var canvas = document.getElementById('upiQR');
+      var ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, 176, 176);
+      var div = document.createElement('div');
+      new QRCode(div, { text: d.qrData, width: 176, height: 176, colorDark: '#1A1208', colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.M });
+      setTimeout(function() {
+        var img = div.querySelector('img');
+        if (img) { var i = new Image(); i.onload = function() { ctx.drawImage(i, 0, 0, 176, 176); }; i.src = img.src; }
+      }, 300);
+    }
+    showModal('paymentModal');
+  }).catch(function() { showSuccessModal(bookingId); });
+}
+document.getElementById('paidBtn').addEventListener('click', function() {
+  if (_bookingId) fetch('/api/payment/' + _bookingId + '/confirm', { method: 'POST' }).catch(function() {});
+  hideModal('paymentModal');
+  showSuccessModal(_bookingId);
+});
+function showSuccessModal(bookingId) {
+  document.getElementById('successBookingId').textContent = bookingId;
+  var tl = document.getElementById('trackLink');
+  if (tl) tl.href = '/track?bookingId=' + bookingId;
+  showModal('successModal');
+}
+
+// ── OTP Login ──────────────────────────────────────────────
+fetch('/api/auth/me').then(function(r) { return r.json(); }).then(function(d) {
+  if (d.loggedIn) { _session = d; renderLoginBar(d); }
+  else renderLoginBar(null);
+}).catch(function() {});
+
+function renderLoginBar(user) {
+  var bar = document.getElementById('loginBar');
+  if (!bar) return;
+  if (user) {
+    bar.innerHTML = '<span style="font-size:13px;color:#7A6A55"><i class="fas fa-user-circle" style="color:#B8780A;margin-right:5px"></i>' + _esc(user.name) + '</span><button onclick="logoutUser()" style="background:none;border:1px solid #E8DDD0;color:#7A6A55;padding:5px 11px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;margin-left:6px">Logout</button>';
+  } else {
+    bar.innerHTML = '<button onclick="showModal(\'loginModal\')" style="display:inline-flex;align-items:center;gap:6px;background:#FFF8EC;border:1px solid rgba(184,120,10,.3);color:#8A5A06;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit"><i class="fas fa-user-circle"></i>Login</button>';
   }
 }
-function toggleChat(){
-  var win=document.getElementById('chatWindow');
-  if(!win)return;
-  var open=win.classList.toggle('open');
-  if(open){if(chatPhone)showChatBody();startChatPoll();}
-  else stopChatPoll();
+function logoutUser() {
+  fetch('/api/auth/logout', { method: 'POST' }).then(function() { _session = null; renderLoginBar(null); });
 }
-function showChatBody(){
-  var s=document.getElementById('chatSetup'),b=document.getElementById('chatBody');
-  if(s)s.style.display='none';
-  if(b)b.style.display='flex';
-  loadHistory();
+document.getElementById('sendOtpBtn').addEventListener('click', function() {
+  var email = document.getElementById('otpEmailIn').value.trim();
+  var name  = document.getElementById('otpNameIn').value.trim();
+  var al    = document.getElementById('otpAlert');
+  if (!email) { al.innerHTML = '<div style="color:#C0392B;font-size:13px;margin-bottom:8px">Please enter your email</div>'; return; }
+  var btn = this; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...'; btn.disabled = true;
+  fetch('/api/auth/send-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, name: name }) })
+    .then(function(r) { return r.json(); }).then(function(d) {
+      if (d.success) {
+        document.getElementById('otpStep1').style.display = 'none';
+        document.getElementById('otpStep2').style.display = 'block';
+        document.getElementById('otpEmailDisplay').textContent = email;
+        al.innerHTML = '';
+        setTimeout(function() { var c = document.getElementById('otpCodeIn'); if (c) c.focus(); }, 100);
+      } else { al.innerHTML = '<div style="color:#C0392B;font-size:13px;margin-bottom:8px">' + (d.error || 'Failed to send OTP') + '</div>'; }
+    }).catch(function() { al.innerHTML = '<div style="color:#C0392B;font-size:13px">Network error</div>'; })
+    .finally(function() { btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP to Email'; btn.disabled = false; });
+});
+document.getElementById('otpEmailIn').addEventListener('keypress', function(e) { if (e.key === 'Enter') document.getElementById('sendOtpBtn').click(); });
+document.getElementById('verifyOtpBtn').addEventListener('click', function() {
+  var email = document.getElementById('otpEmailIn').value.trim();
+  var otp   = document.getElementById('otpCodeIn').value.trim();
+  var al    = document.getElementById('otpAlert');
+  if (!otp) { al.innerHTML = '<div style="color:#C0392B;font-size:13px">Enter the OTP</div>'; return; }
+  var btn = this; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...'; btn.disabled = true;
+  fetch('/api/auth/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, otp: otp }) })
+    .then(function(r) { return r.json(); }).then(function(d) {
+      if (d.success) {
+        _session = d; hideModal('loginModal'); renderLoginBar(d);
+        document.getElementById('bkEmail').value = d.email;
+        showToast('Logged in as ' + d.name + '! Now complete your booking.', 'success');
+      } else { al.innerHTML = '<div style="color:#C0392B;font-size:13px;margin-bottom:8px">' + (d.error || 'Invalid OTP') + '</div>'; }
+    }).catch(function() { al.innerHTML = '<div style="color:#C0392B;font-size:13px">Network error</div>'; })
+    .finally(function() { btn.innerHTML = '<i class="fas fa-check"></i> Verify & Login'; btn.disabled = false; });
+});
+document.getElementById('otpCodeIn').addEventListener('keypress', function(e) { if (e.key === 'Enter') document.getElementById('verifyOtpBtn').click(); });
+
+// ── FEEDBACK (testimonials) ────────────────────────────────
+document.getElementById('openFeedbackBtn').addEventListener('click', function() { showModal('feedbackModal'); });
+var _stars = document.querySelectorAll('#starPicker i');
+_stars.forEach(function(star) {
+  star.addEventListener('click', function() {
+    _fbRating = +star.dataset.val;
+    document.getElementById('fbRating').value = _fbRating;
+    _stars.forEach(function(s, i) { s.classList.toggle('lit', i < _fbRating); s.style.color = i < _fbRating ? '#F59E0B' : '#E8DDD0'; });
+  });
+  star.addEventListener('mouseover', function() {
+    _stars.forEach(function(s, i) { s.style.color = i < +star.dataset.val ? '#F59E0B' : '#E8DDD0'; });
+  });
+  star.addEventListener('mouseout', function() {
+    _stars.forEach(function(s, i) { s.style.color = i < _fbRating ? '#F59E0B' : '#E8DDD0'; });
+  });
+});
+var _fbMsg = document.getElementById('fbMsg');
+var _fbCc  = document.getElementById('fbCharCount');
+if (_fbMsg && _fbCc) _fbMsg.addEventListener('input', function() { _fbCc.textContent = this.value.length + ' / 500'; });
+document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (!_fbRating) { showToast('Please select a star rating', 'error'); return; }
+  var btn = document.getElementById('fbSubmitBtn');
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...'; btn.disabled = true;
+  fetch('/api/testimonials', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: document.getElementById('fbName').value, phone: document.getElementById('fbPhone').value, rating: _fbRating, message: document.getElementById('fbMsg').value })
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    if (d.success) {
+      hideModal('feedbackModal');
+      document.getElementById('feedbackForm').reset();
+      _fbRating = 0;
+      _stars.forEach(function(s) { s.classList.remove('lit'); s.style.color = '#E8DDD0'; });
+      showToast('Thank you! Your review will appear after approval.', 'success');
+    } else { showToast(d.error || 'Failed to submit', 'error'); }
+  }).catch(function() { showToast('Network error. Please try again.', 'error'); })
+  .finally(function() { btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Review'; btn.disabled = false; });
+});
+
+// ── CHAT ──────────────────────────────────────────────────
+document.getElementById('chatBtn').addEventListener('click', function() {
+  var win = document.getElementById('chatWindow');
+  var showing = win.style.display === 'flex';
+  win.style.display = showing ? 'none' : 'flex';
+  if (!showing) {
+    if (_chatPhone) _showChatBody();
+    _startChatPoll();
+  } else { _stopChatPoll(); }
+});
+document.getElementById('chatCloseBtn').addEventListener('click', function() {
+  document.getElementById('chatWindow').style.display = 'none';
+  _stopChatPoll();
+});
+document.getElementById('chatStartBtn').addEventListener('click', _startChat);
+document.getElementById('chatSendBtn').addEventListener('click', _sendChat);
+document.getElementById('chatIn').addEventListener('keypress', function(e) { if (e.key === 'Enter') _sendChat(); });
+// Pre-fill if returning user
+if (_chatPhone) {
+  var _ni = document.getElementById('chatNameIn'); var _pi = document.getElementById('chatPhoneIn');
+  if (_ni) _ni.value = _chatName; if (_pi) _pi.value = _chatPhone;
 }
-function startChat(){
-  var n=document.getElementById('chatNameIn')&&document.getElementById('chatNameIn').value.trim();
-  var p=document.getElementById('chatPhoneIn')&&document.getElementById('chatPhoneIn').value.trim();
-  if(!n||!p){toast('Enter name and phone','error');return;}
-  chatName=n; chatPhone=p;
-  localStorage.setItem('bt_name',n); localStorage.setItem('bt_phone',p);
-  resubWithPhone(p);
-  showChatBody();
+function _showChatBody() {
+  document.getElementById('chatSetup').style.display = 'none';
+  document.getElementById('chatBody').style.display = 'flex';
+  _loadChatHistory();
 }
-function loadHistory(){
-  if(!chatPhone)return;
-  fetch('/api/chat/'+encodeURIComponent(chatPhone)+'/history').then(function(r){return r.json();}).then(function(d){
-    var box=document.getElementById('chatMsgs');
-    if(!box)return;
-    box.innerHTML='';
-    if(!d.messages||!d.messages.length){
-      box.innerHTML='<div class="chat-empty" id="chatEmpty"><i class="fas fa-comment-slash" style="font-size:24px;display:block;margin-bottom:8px;color:#ccc"></i>No messages yet. Say hello!</div>';
-    }else{
-      d.messages.forEach(function(m){appendMsg(m,false);});
-      lastMsgTs=d.messages[d.messages.length-1].createdAt;
-    }
-    scrollChat();
-  }).catch(function(){});
+function _startChat() {
+  var n = document.getElementById('chatNameIn').value.trim();
+  var p = document.getElementById('chatPhoneIn').value.trim();
+  if (!n || !p) { showToast('Enter your name and phone', 'error'); return; }
+  _chatName = n; _chatPhone = p;
+  localStorage.setItem('bt_name', n); localStorage.setItem('bt_phone', p);
+  _resubPhone(p);
+  _showChatBody();
 }
-function appendMsg(msg,doScroll){
-  if(doScroll===undefined)doScroll=true;
-  var box=document.getElementById('chatMsgs');
-  if(!box)return;
-  var empty=document.getElementById('chatEmpty');
-  if(empty)empty.remove();
-  if(msg._id&&document.getElementById('cm-'+msg._id))return;
-  var d=document.createElement('div');
-  d.className='chat-msg '+(msg.fromCustomer?'from-me':'from-admin');
-  if(msg._id)d.id='cm-'+msg._id;
-  var t=new Date(msg.createdAt).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
-  d.innerHTML='<div>'+esc(msg.message)+'</div><div class="msg-time">'+(msg.fromCustomer?'You':'Brajwasi')+' · '+t+'</div>';
+function _loadChatHistory() {
+  fetch('/api/chat/' + encodeURIComponent(_chatPhone) + '/history')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var box = document.getElementById('chatMsgs');
+      box.innerHTML = '';
+      if (!d.messages || !d.messages.length) {
+        box.innerHTML = '<div id="chatEmpty" style="text-align:center;color:#A0917E;font-size:13px;padding:20px"><i class="fas fa-comment-slash" style="font-size:24px;display:block;margin-bottom:8px;color:#ccc"></i>No messages yet. Say hello!</div>';
+      } else {
+        d.messages.forEach(function(m) { _appendMsg(m, false); });
+        _lastMsgTs = d.messages[d.messages.length - 1].createdAt;
+      }
+      box.scrollTop = box.scrollHeight;
+    }).catch(function() {});
+}
+function _appendMsg(msg, scroll) {
+  if (scroll === undefined) scroll = true;
+  var box = document.getElementById('chatMsgs');
+  var empty = document.getElementById('chatEmpty');
+  if (empty) empty.remove();
+  if (msg._id && document.getElementById('cm-' + msg._id)) return;
+  var d = document.createElement('div');
+  d.style.cssText = 'max-width:82%;padding:9px 13px;border-radius:12px;font-size:13px;line-height:1.4;word-break:break-word;' + (msg.fromCustomer ? 'background:linear-gradient(135deg,#1a56db,#0e3eb3);color:#fff;align-self:flex-end;margin-left:auto;border-bottom-right-radius:4px' : 'background:#fff;color:#1A1208;align-self:flex-start;border-bottom-left-radius:4px;border:1px solid #E8DDD0');
+  if (msg._id) d.id = 'cm-' + msg._id;
+  var t = new Date(msg.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  d.innerHTML = '<div>' + _esc(msg.message) + '</div><div style="font-size:10px;opacity:.6;margin-top:3px">' + (msg.fromCustomer ? 'You' : 'Brajwasi') + ' \u00b7 ' + t + '</div>';
   box.appendChild(d);
-  if(doScroll)scrollChat();
+  if (scroll) box.scrollTop = box.scrollHeight;
 }
-function scrollChat(){var b=document.getElementById('chatMsgs');if(b)b.scrollTop=b.scrollHeight;}
-function sendChatMsg(){
-  var inp=document.getElementById('chatIn');
-  var msg=inp&&inp.value.trim();
-  if(!msg||!chatPhone)return;
-  inp.value='';
-  var tid='tmp-'+Date.now();
-  appendMsg({_id:tid,message:msg,fromCustomer:true,createdAt:new Date().toISOString()});
-  fetch('/api/chat/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customerName:chatName,customerPhone:chatPhone,message:msg})}).then(function(){
-    lastMsgTs=new Date().toISOString();
-    var te=document.getElementById('cm-'+tid);if(te)te.remove();
-    loadHistory();
-  }).catch(function(){});
+function _sendChat() {
+  var inp = document.getElementById('chatIn');
+  var msg = inp.value.trim();
+  if (!msg || !_chatPhone) return;
+  inp.value = '';
+  var tid = 'tmp-' + Date.now();
+  _appendMsg({ _id: tid, message: msg, fromCustomer: true, createdAt: new Date().toISOString() });
+  fetch('/api/chat/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ customerName: _chatName, customerPhone: _chatPhone, message: msg }) })
+    .then(function() { _lastMsgTs = new Date().toISOString(); var te = document.getElementById('cm-' + tid); if (te) te.remove(); _loadChatHistory(); })
+    .catch(function() {});
 }
-function pollChat(){
-  if(!chatPhone)return;
-  var since=lastMsgTs||new Date(0).toISOString();
-  fetch('/api/chat/'+encodeURIComponent(chatPhone)+'/updates?since='+encodeURIComponent(since)).then(function(r){return r.json();}).then(function(d){
-    if(d.messages&&d.messages.length){
-      d.messages.forEach(function(m){
-        appendMsg(m);
-        if(!lastMsgTs||new Date(m.createdAt)>new Date(lastMsgTs))lastMsgTs=m.createdAt;
-      });
-    }
-  }).catch(function(){});
+function _pollChat() {
+  if (!_chatPhone) return;
+  var since = _lastMsgTs || new Date(0).toISOString();
+  fetch('/api/chat/' + encodeURIComponent(_chatPhone) + '/updates?since=' + encodeURIComponent(since))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.messages && d.messages.length) {
+        d.messages.forEach(function(m) {
+          _appendMsg(m);
+          if (!_lastMsgTs || new Date(m.createdAt) > new Date(_lastMsgTs)) _lastMsgTs = m.createdAt;
+        });
+      }
+    }).catch(function() {});
 }
-function startChatPoll(){if(!chatPoll)chatPoll=setInterval(pollChat,4000);}
-function stopChatPoll(){clearInterval(chatPoll);chatPoll=null;}
+function _startChatPoll() { if (!_chatPoll) _chatPoll = setInterval(_pollChat, 4000); }
+function _stopChatPoll() { clearInterval(_chatPoll); _chatPoll = null; }
 
-// ═══════════════════════════════════════════════
-//  MODALS
-// ═══════════════════════════════════════════════
-function openModal(id){var e=document.getElementById(id);if(e){e.classList.add('open');document.body.style.overflow='hidden';}}
-function closeModal(id){var e=document.getElementById(id);if(e){e.classList.remove('open');document.body.style.overflow='';}}
-function openFeedback(){openModal('feedbackModal');}
-function closeFeedback(){closeModal('feedbackModal');}
-function openLoginModal(){
-  var s1=document.getElementById('otpStep1'),s2=document.getElementById('otpStep2'),al=document.getElementById('otpAlert');
-  if(s1)s1.style.display='block'; if(s2)s2.style.display='none'; if(al)al.innerHTML='';
-  openModal('loginModal');
-}
-function wireModals(){
-  var pairs=[['closeBookingBtn','bookingModal'],['closePayBtn','paymentModal'],['closeSuccessBtn','successModal'],['closeFeedbackBtn','feedbackModal'],['closeLoginBtn','loginModal']];
-  pairs.forEach(function(pr){
-    var btn=document.getElementById(pr[0]);
-    if(btn)btn.addEventListener('click',function(){closeModal(pr[1]);});
-  });
-  ['bookingModal','paymentModal','successModal','feedbackModal','loginModal'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el)el.addEventListener('click',function(e){if(e.target===e.currentTarget)closeModal(id);});
-  });
-  // Re-wire after slight delay so elements created after script tag are available
-  setTimeout(function(){
-    var fb=document.getElementById('closeFeedbackBtn');
-    if(fb&&!fb._wired){fb._wired=true;fb.addEventListener('click',function(){closeModal('feedbackModal');});}
-    var fbo=document.getElementById('feedbackModal');
-    if(fbo&&!fbo._wired){fbo._wired=true;fbo.addEventListener('click',function(e){if(e.target===e.currentTarget)closeModal('feedbackModal');});}
-  },100);
-  // OTP buttons
-  var soBtn=document.getElementById('sendOtpBtn'),voBtn=document.getElementById('verifyOtpBtn');
-  var oEmail=document.getElementById('otpEmailIn'),oCode=document.getElementById('otpCodeIn');
-  if(soBtn)soBtn.addEventListener('click',sendOtp);
-  if(voBtn)voBtn.addEventListener('click',verifyOtp);
-  if(oEmail)oEmail.addEventListener('keypress',function(e){if(e.key==='Enter')sendOtp();});
-  if(oCode)oCode.addEventListener('keypress',function(e){if(e.key==='Enter')verifyOtp();});
-}
+// ── Enquiry form ───────────────────────────────────────────
+document.getElementById('enquiryForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var n = document.getElementById('eq-name').value, p = document.getElementById('eq-phone').value;
+  var r = document.getElementById('eq-route').value, d = document.getElementById('eq-date').value;
+  window.open('https://wa.me/919411061000?text=' + encodeURIComponent('Hi Brajwasi Tour & Travels,\n\n👤 Name: ' + n + '\n📞 Phone: ' + p + '\n🗺 Route: ' + r + '\n📅 Date: ' + d + '\n\nPlease confirm availability.'), '_blank');
+  this.reset();
+  showToast('Redirecting to WhatsApp...', 'success');
+});
 
-// ═══════════════════════════════════════════════
-//  OTP LOGIN
-// ═══════════════════════════════════════════════
-function sendOtp(){
-  var email=document.getElementById('otpEmailIn').value.trim();
-  var name=document.getElementById('otpNameIn').value.trim();
-  var al=document.getElementById('otpAlert');
-  if(!email){al.innerHTML='<div style="color:var(--red);font-size:13px;margin-bottom:8px">Please enter your email</div>';return;}
-  var btn=document.getElementById('sendOtpBtn');
-  btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Sending...'; btn.disabled=true;
-  fetch('/api/auth/send-otp',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,name:name})}).then(function(r){return r.json();}).then(function(d){
-    if(d.success){
-      document.getElementById('otpStep1').style.display='none';
-      document.getElementById('otpStep2').style.display='block';
-      document.getElementById('otpEmailDisplay').textContent=email;
-      al.innerHTML='';
-      setTimeout(function(){var c=document.getElementById('otpCodeIn');if(c)c.focus();},100);
-    }else{al.innerHTML='<div style="color:var(--red);font-size:13px;margin-bottom:8px">'+(d.error||'Failed')+'</div>';}
-    btn.innerHTML='<i class="fas fa-paper-plane"></i> Send OTP'; btn.disabled=false;
-  }).catch(function(){al.innerHTML='<div style="color:var(--red);font-size:13px">Network error</div>';btn.innerHTML='<i class="fas fa-paper-plane"></i> Send OTP';btn.disabled=false;});
+// ── Toast ──────────────────────────────────────────────────
+function showToast(msg, type) {
+  var old = document.querySelector('.bt-toast');
+  if (old) old.remove();
+  var t = document.createElement('div');
+  t.className = 'bt-toast';
+  var c = { success: ['#EAF7EE', '#1A7A3A'], error: ['#FDEDEB', '#C0392B'], info: ['#EEF4FF', '#1A5DAB'] }[type] || ['#EAF7EE', '#1A7A3A'];
+  t.style.cssText = 'position:fixed;bottom:90px;right:20px;z-index:999999;background:' + c[0] + ';border:1px solid ' + c[1] + ';color:' + c[1] + ';padding:13px 18px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.12);max-width:320px;font-family:DM Sans,sans-serif;';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 4000);
 }
-function verifyOtp(){
-  var email=document.getElementById('otpEmailIn').value.trim();
-  var otp=document.getElementById('otpCodeIn').value.trim();
-  var al=document.getElementById('otpAlert');
-  if(!otp){al.innerHTML='<div style="color:var(--red);font-size:13px">Enter the OTP</div>';return;}
-  var btn=document.getElementById('verifyOtpBtn');
-  btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Verifying...'; btn.disabled=true;
-  fetch('/api/auth/verify-otp',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,otp:otp})}).then(function(r){return r.json();}).then(function(d){
-    if(d.success){
-      customerSession=d; closeModal('loginModal'); renderLoginBar(d);
-      toast('Logged in as '+d.name+'! Complete your booking.','success');
-      var ef=document.getElementById('bkEmail');if(ef)ef.value=d.email;
-    }else{al.innerHTML='<div style="color:var(--red);font-size:13px;margin-bottom:8px">'+(d.error||'Invalid OTP')+'</div>';}
-    btn.innerHTML='<i class="fas fa-check"></i> Verify & Login'; btn.disabled=false;
-  }).catch(function(){al.innerHTML='<div style="color:var(--red);font-size:13px">Network error</div>';btn.innerHTML='<i class="fas fa-check"></i> Verify & Login';btn.disabled=false;});
-}
-
-// ═══════════════════════════════════════════════
-//  BOOKING
-// ═══════════════════════════════════════════════
-function openBooking(id,model,ppk,fkm,fp,ekc){
-  carData={id:id,model:model,ppk:ppk,fkm:fkm,fp:fp,ekc:ekc};
-  document.getElementById('bookCarId').value=id;
-  document.getElementById('modalCarName').textContent=model;
-  document.getElementById('estKm').value='';
-  document.getElementById('calcResult').style.display='none';
-  document.getElementById('bkDate').min=new Date().toISOString().split('T')[0];
-  if(customerSession){
-    var en=document.getElementById('bkEmail');if(en)en.value=customerSession.email;
-    var nn=document.getElementById('bkName');if(nn&&!nn.value)nn.value=customerSession.name;
-  }
-  openModal('bookingModal');
-}
-function wireBookingForm(){
-  var km=document.getElementById('estKm');
-  if(km)km.addEventListener('input',calcPrice);
-  var form=document.getElementById('bookingForm');
-  if(!form)return;
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    var kmVal=document.getElementById('estKm').value;
-    if(!kmVal||+kmVal<1){toast('Please enter estimated distance in KM','error');document.getElementById('estKm').focus();return;}
-    if(!customerSession){openLoginModal();return;}
-    var btn=document.getElementById('bookSubmitBtn');
-    btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Processing...'; btn.disabled=true;
-    fetch('/api/book',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      carId:document.getElementById('bookCarId').value,
-      customerName:document.getElementById('bkName').value,
-      customerPhone:document.getElementById('bkPhone').value,
-      pickupLocation:document.getElementById('bkPickup').value,
-      dropLocation:document.getElementById('bkDrop').value,
-      journeyDate:document.getElementById('bkDate').value,
-      journeyTime:document.getElementById('bkTime').value,
-      estimatedKm:kmVal,
-      notes:document.getElementById('bkNotes').value
-    })}).then(function(r){return r.json();}).then(function(d){
-      if(d.success){currentBookingId=d.bookingId;closeModal('bookingModal');form.reset();openPayModal(d.bookingId);}
-      else if(d.loginRequired){openLoginModal();}
-      else{toast(d.error||'Booking failed. Call 9411061000','error');}
-      btn.innerHTML='<i class="fas fa-check-circle"></i> Confirm Booking'; btn.disabled=false;
-    }).catch(function(){toast('Network error. Call 9411061000','error');btn.innerHTML='<i class="fas fa-check-circle"></i> Confirm Booking';btn.disabled=false;});
-  });
-}
-function calcPrice(){
-  var km=parseInt(document.getElementById('estKm').value);
-  var d=carData;
-  if(!km||km<=0){document.getElementById('calcResult').style.display='none';return;}
-  var total=0,bd='';
-  if(d.fkm&&d.fp&&km<=d.fkm){total=d.fp;bd='📦 Fixed '+d.fkm+'km Package';}
-  else if(d.fkm&&d.fp){var ex=km-d.fkm;total=d.fp+ex*d.ekc;bd='📦 '+d.fkm+'km: ₹'+d.fp+' + Extra '+ex+'km × ₹'+d.ekc;}
-  else{total=km*d.ppk;bd='📍 '+km+'km × ₹'+d.ppk+'/km';}
-  document.getElementById('calcBreakdown').textContent=bd;
-  document.getElementById('calcTotal').textContent='Estimated Fare: ₹'+total.toLocaleString('en-IN')+' (excl. toll)';
-  document.getElementById('calcResult').style.display='block';
-}
-
-// ═══════════════════════════════════════════════
-//  PAYMENT
-// ═══════════════════════════════════════════════
-function openPayModal(bookingId){
-  document.getElementById('payBookingId').textContent='Booking ID: '+bookingId;
-  fetch('/api/payment/'+bookingId,{credentials:'include'}).then(function(r){return r.json();}).then(function(d){
-    if(d.error){showSuccess(bookingId);return;}
-    payData=d;
-    document.getElementById('upiIdTxt').textContent='UPI: '+d.upiId;
-    var map={upiPhonePe:'phonepe',upiGPay:'gpay',upiPaytm:'paytm',upiAnyBtn:'upi'};
-    Object.keys(map).forEach(function(id){
-      var el=document.getElementById(id);
-      if(el)el.onclick=function(e){if(id!=='upiAnyBtn')e.preventDefault();launchUpi(map[id]);};
-    });
-    var isMobile=/Android|iPhone|iPad/i.test(navigator.userAgent);
-    var qw=document.getElementById('upiQrWrap');
-    if(qw)qw.style.display=isMobile?'none':'block';
-    if(!isMobile)drawQR(d.qrData);
-    openModal('paymentModal');
-  }).catch(function(){showSuccess(bookingId);});
-}
-function launchUpi(app){
-  if(!payData)return;
-  var urls={phonepe:payData.phonepe,gpay:payData.gpay,paytm:payData.paytm,upi:payData.upiUrl};
-  window.location.href=urls[app]||payData.upiUrl;
-  setTimeout(function(){toast('If app did not open, try another or scan QR','info');},2000);
-}
-function drawQR(data){
-  var canvas=document.getElementById('upiQR');
-  if(!canvas||!window.QRCode)return;
-  var ctx=canvas.getContext('2d'); ctx.clearRect(0,0,176,176);
-  var div=document.createElement('div');
-  new QRCode(div,{text:data,width:176,height:176,colorDark:'#1A1208',colorLight:'#FFFFFF',correctLevel:QRCode.CorrectLevel.M});
-  setTimeout(function(){var img=div.querySelector('img');if(img){var i=new Image();i.onload=function(){ctx.drawImage(i,0,0,176,176);};i.src=img.src;}},300);
-}
-function wirePayBtn(){
-  var btn=document.getElementById('paidBtn');
-  if(btn)btn.addEventListener('click',function(){
-    if(currentBookingId)fetch('/api/payment/'+currentBookingId+'/confirm',{method:'POST',credentials:'include'}).catch(function(){});
-    closeModal('paymentModal');
-    showSuccess(currentBookingId);
-  });
-}
-function showSuccess(bookingId){
-  document.getElementById('successBookingId').textContent=bookingId;
-  var tl=document.getElementById('trackLink');if(tl)tl.href='/track?bookingId='+bookingId;
-  openModal('successModal');
-}
-
-// ═══════════════════════════════════════════════
-//  ENQUIRY
-// ═══════════════════════════════════════════════
-function wireEnquiry(){
-  var form=document.getElementById('enquiryForm');
-  if(!form)return;
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    var n=document.getElementById('eq-name').value,p=document.getElementById('eq-phone').value;
-    var ro=document.getElementById('eq-route').value,da=document.getElementById('eq-date').value;
-    var msg=encodeURIComponent('Hi Brajwasi Tour & Travels,
-
-👤 Name: '+n+'
-📞 Phone: '+p+'
-🗺 Route: '+ro+'
-📅 Date: '+da+'
-
-Please confirm availability.');
-    window.open('https://wa.me/919411061000?text='+msg,'_blank');
-    form.reset(); toast('Redirecting to WhatsApp...','success');
-  });
-}
-
-// ═══════════════════════════════════════════════
-//  FEEDBACK (TESTIMONIALS)
-// ═══════════════════════════════════════════════
-function wireFeedback(){
-  var picker=document.getElementById('starPicker');
-  if(picker){
-    Array.from(picker.querySelectorAll('i')).forEach(function(star){
-      star.addEventListener('click',function(){
-        fbRating=+star.dataset.val;
-        document.getElementById('fbRating').value=fbRating;
-        Array.from(picker.querySelectorAll('i')).forEach(function(s,i){s.classList.toggle('active',i<fbRating);});
-      });
-      star.addEventListener('mouseover',function(){
-        Array.from(picker.querySelectorAll('i')).forEach(function(s,i){s.style.color=i<+star.dataset.val?'#F59E0B':'#E8DDD0';});
-      });
-      star.addEventListener('mouseout',function(){
-        Array.from(picker.querySelectorAll('i')).forEach(function(s,i){s.style.color=i<fbRating?'#F59E0B':'#E8DDD0';});
-      });
-    });
-  }
-  var charEl=document.getElementById('fbMsg'),cc=document.getElementById('fbCharCount');
-  if(charEl&&cc)charEl.addEventListener('input',function(){cc.textContent=this.value.length+' / 500';});
-  var form=document.getElementById('feedbackForm');
-  if(!form)return;
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    if(!fbRating){toast('Please select a star rating','error');return;}
-    var btn=document.getElementById('fbSubmitBtn');
-    btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Submitting...'; btn.disabled=true;
-    fetch('/api/testimonials',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      name:document.getElementById('fbName').value,
-      phone:document.getElementById('fbPhone').value,
-      rating:fbRating,
-      message:document.getElementById('fbMsg').value
-    })}).then(function(r){return r.json();}).then(function(d){
-      if(d.success){
-        closeFeedback(); form.reset(); fbRating=0;
-        var stars=document.getElementById('starPicker');
-        if(stars)Array.from(stars.querySelectorAll('i')).forEach(function(s){s.classList.remove('active');});
-        toast('Thank you! Your review will appear after approval.','success');
-      }else{toast(d.error||'Failed to submit','error');}
-      btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Review'; btn.disabled=false;
-    }).catch(function(){toast('Network error. Please try again.','error');btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Review';btn.disabled=false;});
-  });
-}
-
-// ═══════════════════════════════════════════════
-//  UTILS
-// ═══════════════════════════════════════════════
-function toast(msg,type){
-  document.querySelector('.toast-msg')&&document.querySelector('.toast-msg').remove();
-  var t=document.createElement('div'); t.className='toast-msg';
-  var c={success:['#EAF7EE','#1A7A3A'],error:['#FDEDEB','#C0392B'],info:['#EEF4FF','#1A5DAB']}[type]||['#EAF7EE','#1A7A3A'];
-  t.style.cssText='position:fixed;bottom:90px;right:20px;z-index:999999;background:'+c[0]+';border:1px solid '+c[1]+';color:'+c[1]+';padding:13px 18px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.12);max-width:320px;font-family:DM Sans,sans-serif;';
-  t.textContent=msg; document.body.appendChild(t);
-  setTimeout(function(){t.remove();},4000);
-}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function _esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 </script>
-<!-- FEEDBACK MODAL -->
-<div class="modal-overlay" id="feedbackModal">
-  <div class="modal" style="max-width:480px">
-    <button class="modal-close" id="closeFeedbackBtn"><i class="fas fa-times"></i></button>
-    <div class="modal-header">
-      <h2><i class="fas fa-star" style="color:var(--gold);margin-right:8px"></i>Share Your Experience</h2>
-      <p>Your review helps other travellers choose wisely</p>
-    </div>
-    <form id="feedbackForm">
-      <div class="form-row">
-        <div class="form-group"><label>Your Name *</label><input type="text" id="fbName" placeholder="Full name" required></div>
-        <div class="form-group"><label>Phone *</label><input type="tel" id="fbPhone" placeholder="Mobile number" required></div>
-      </div>
-      <div class="form-group">
-        <label>Rating *</label>
-        <div class="star-picker" id="starPicker">
-          <i class="fas fa-star" data-val="1"></i>
-          <i class="fas fa-star" data-val="2"></i>
-          <i class="fas fa-star" data-val="3"></i>
-          <i class="fas fa-star" data-val="4"></i>
-          <i class="fas fa-star" data-val="5"></i>
-        </div>
-        <input type="hidden" id="fbRating" value="0">
-      </div>
-      <div class="form-group">
-        <label>Your Review *</label>
-        <textarea id="fbMsg" rows="4" placeholder="Tell us about your experience with Brajwasi Travels..." required maxlength="500"></textarea>
-        <div style="text-align:right;font-size:11px;color:var(--light)" id="fbCharCount">0 / 500</div>
-      </div>
-      <button type="submit" class="btn-primary full-btn" id="fbSubmitBtn">
-        <i class="fas fa-paper-plane"></i> Submit Review
-      </button>
-    </form>
-  </div>
-</div>
-
-<style>
-/* ── Testimonials ─────────── */
-.testimonials-section{background:var(--bg);}
-.testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;}
-.testi-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;transition:var(--ease);}
-.testi-card:hover{border-color:rgba(184,120,10,.35);transform:translateY(-3px);box-shadow:var(--shadow);}
-.testi-stars{margin-bottom:12px;display:flex;gap:3px;font-size:15px;}
-.testi-msg{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px;font-style:italic;}
-.testi-author{display:flex;align-items:center;gap:10px;}
-.testi-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;flex-shrink:0;}
-.testi-name{font-size:14px;font-weight:700;color:var(--text);}
-.testi-date{font-size:11px;color:var(--light);}
-/* Star picker */
-.star-picker{display:flex;gap:6px;margin-bottom:6px;}
-.star-picker i{font-size:28px;color:#E8DDD0;cursor:pointer;transition:color .15s;}
-.star-picker i.active,.star-picker i:hover{color:#F59E0B;}
-</style>
-
-
-<!-- LOGIN MODAL (OTP) -->
-<div class="modal-overlay" id="loginModal">
-  <div class="modal" style="max-width:440px">
-    <button class="modal-close" id="closeLoginBtn"><i class="fas fa-times"></i></button>
-    <div class="modal-header">
-      <h2><i class="fas fa-lock" style="color:var(--gold);margin-right:8px"></i>Login to Book</h2>
-      <p>Enter your email to receive a one-time password</p>
-    </div>
-    <div id="otpAlert"></div>
-    <!-- Step 1: Enter email -->
-    <div id="otpStep1">
-      <div class="form-group"><label>Your Name</label><input type="text" id="otpNameIn" placeholder="Full name (optional)" autocomplete="name"></div>
-      <div class="form-group"><label>Email Address *</label><input type="email" id="otpEmailIn" placeholder="you@example.com" autocomplete="email" required></div>
-      <button class="btn-primary full-btn" id="sendOtpBtn" style="margin-top:8px">
-        <i class="fas fa-paper-plane"></i> Send OTP to Email
-      </button>
-      <p style="text-align:center;font-size:12px;color:var(--light);margin-top:12px">We send a 6-digit code to your email. No password needed.</p>
-    </div>
-    <!-- Step 2: Enter OTP -->
-    <div id="otpStep2" style="display:none">
-      <div style="background:var(--gold-bg);border:1px solid rgba(184,120,10,.2);border-radius:10px;padding:14px 16px;margin-bottom:16px;text-align:center">
-        <p style="font-size:13px;color:var(--muted)">OTP sent to <strong id="otpEmailDisplay"></strong></p>
-        <p style="font-size:12px;color:var(--light);margin-top:4px">Check your inbox (and spam folder)</p>
-      </div>
-      <div class="form-group"><label>Enter 6-Digit OTP *</label><input type="text" id="otpCodeIn" placeholder="e.g. 482916" maxlength="6" autocomplete="one-time-code" style="text-align:center;font-size:22px;letter-spacing:8px;font-weight:800"></div>
-      <button class="btn-primary full-btn" id="verifyOtpBtn">
-        <i class="fas fa-check"></i> Verify & Login
-      </button>
-      <button onclick="document.getElementById('otpStep1').style.display='block';document.getElementById('otpStep2').style.display='none'" style="display:block;width:100%;margin-top:10px;padding:10px;background:none;border:1px solid var(--border);border-radius:var(--r);color:var(--muted);cursor:pointer;font-size:13px;font-family:inherit">
-        ← Use a different email
-      </button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
