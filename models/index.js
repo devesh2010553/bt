@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-// ── Car ──────────────────────────────────────────────────────
 const carSchema = new mongoose.Schema({
   name: { type: String, required: true },
   model: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: String, default: '/images/default-crysta.jpeg' }, // URL path or data URI
+  imageData: { type: String },   // base64 data URI — stored in MongoDB, works on all servers
   pricePerKm: { type: Number, required: true },
   fixedPackage: { km: Number, price: Number },
   extraKmCharge: { type: Number, required: true },
@@ -17,7 +17,6 @@ const carSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// ── Booking ──────────────────────────────────────────────────
 const bookingSchema = new mongoose.Schema({
   bookingId: { type: String, unique: true, required: true },
   car: { type: mongoose.Schema.Types.ObjectId, ref: 'Car' },
@@ -34,27 +33,24 @@ const bookingSchema = new mongoose.Schema({
   status: { type: String, enum: ['pending','confirmed','completed','cancelled'], default: 'pending' },
   advancePaid: { type: Boolean, default: false },
   advanceConfirmedByAdmin: { type: Boolean, default: false },
-  actualKm: Number,           // uploaded by driver after trip
-  tollAmount: Number,         // toll entered by driver/admin
-  finalFare: Number,          // calculated from actualKm + toll
-  balanceDue: Number,         // finalFare - advanceDeducted
-  cancelledBy: String,        // 'customer' or 'admin'
+  actualKm: Number,
+  tollAmount: Number,
+  finalFare: Number,
+  balanceDue: Number,
+  cancelledBy: String,
   paymentReceivedByAdmin: { type: Boolean, default: false },
   paymentReceivedAt: Date,
   cancelledAt: Date,
-  penaltyAmount: Number,      // deducted from advance on late cancel
-  refundAmount: Number,       // amount returned to customer
-  driverArrivalTime: Date,    // when driver marked arrived
+  penaltyAmount: Number,
+  refundAmount: Number,
+  driverArrivalTime: Date,
   assignedPartner: { type: mongoose.Schema.Types.ObjectId, ref: 'CarPartner', default: null },
   assignedPartnerName: String,
-  driverLat: Number,
-  driverLng: Number,
-  driverLastSeen: Date,
+  driverLat: Number, driverLng: Number, driverLastSeen: Date,
   notes: String,
   createdAt: { type: Date, default: Date.now }
 });
 
-// ── Push Subscription ────────────────────────────────────────
 const subscriptionSchema = new mongoose.Schema({
   endpoint: { type: String, unique: true },
   keys: { p256dh: String, auth: String },
@@ -63,7 +59,6 @@ const subscriptionSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// ── Chat Message ─────────────────────────────────────────────
 const chatMessageSchema = new mongoose.Schema({
   sessionId: { type: String, required: true, index: true },
   customerName: { type: String, required: true },
@@ -74,7 +69,6 @@ const chatMessageSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// ── Testimonial ──────────────────────────────────────────────
 const testimonialSchema = new mongoose.Schema({
   name: { type: String, required: true },
   phone: { type: String, required: true },
@@ -84,7 +78,6 @@ const testimonialSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// ── Car Partner / Driver ─────────────────────────────────────
 const carPartnerSchema = new mongoose.Schema({
   ownerName: { type: String, required: true },
   phone: { type: String, required: true },
@@ -98,20 +91,14 @@ const carPartnerSchema = new mongoose.Schema({
   fixedKm: Number,
   fixedPrice: Number,
   extraKmCharge: { type: Number, required: true },
-  licensePhoto: String,
-  rcPhoto: String,
-  insurancePhoto: String,
+  licensePhoto: String, rcPhoto: String, insurancePhoto: String,
   status: { type: String, enum: ['pending','approved','rejected'], default: 'pending' },
   commissionPct: { type: Number, default: 10 },
-  // Driver secret for location sharing (set at registration, changeable via OTP)
-  driverSecret: { type: String, required: false },
-  // OTP for secret reset
-  resetOtp: String,
-  resetOtpExpiry: Date,
+  driverSecret: String,
+  resetOtp: String, resetOtpExpiry: Date,
   createdAt: { type: Date, default: Date.now }
 });
 
-// ── Customer OTP Login ───────────────────────────────────────
 const otpSchema = new mongoose.Schema({
   email: { type: String, required: true },
   name: String,

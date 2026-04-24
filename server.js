@@ -38,13 +38,17 @@ app.use(session({
 }));
 
 // ── File storage ─────────────────────────────────────────────
-['public/uploads','public/uploads/docs'].forEach(d => { if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }); });
-const imgStorage = multer.diskStorage({ destination: (_, f, cb) => cb(null, 'public/uploads/'), filename: (_, f, cb) => cb(null, Date.now() + '-' + f.fieldname + path.extname(f.originalname)) });
-const docStorage = multer.diskStorage({ destination: (_, f, cb) => cb(null, 'public/uploads/docs/'), filename: (_, f, cb) => cb(null, Date.now() + '-' + f.fieldname + path.extname(f.originalname)) });
-const imgFilter = (_, f, cb) => f.mimetype.startsWith('image/') ? cb(null, true) : cb(new Error('Images only'));
-const docFilter = (_, f, cb) => ['image/jpeg','image/png','image/webp','application/pdf'].includes(f.mimetype) ? cb(null, true) : cb(new Error('Image/PDF only'));
-const uploadImg  = multer({ storage: imgStorage, limits: { fileSize: 5e6 }, fileFilter: imgFilter });
-const uploadDocs = multer({ storage: docStorage, limits: { fileSize: 10e6 }, fileFilter: docFilter });
+// Car images: stored in MongoDB as base64 — works on all devices, survives Render redeploys
+// Partner docs: still on disk (large files, rarely viewed)
+if (!fs.existsSync('public/uploads/docs')) fs.mkdirSync('public/uploads/docs', { recursive: true });
+const memStorage  = multer.memoryStorage(); // images → base64 → MongoDB
+const docStorage  = multer.diskStorage({ destination: (_, f, cb) => cb(null, 'public/uploads/docs/'), filename: (_, f, cb) => cb(null, Date.now() + '-' + f.fieldname + path.extname(f.originalname)) });
+const imgFilter   = (_, f, cb) => f.mimetype.startsWith('image/') ? cb(null, true) : cb(new Error('Images only'));
+const docFilter   = (_, f, cb) => ['image/jpeg','image/png','image/webp','application/pdf'].includes(f.mimetype) ? cb(null, true) : cb(new Error('Image/PDF only'));
+const uploadImg   = multer({ storage: memStorage,  limits: { fileSize: 3e6 }, fileFilter: imgFilter });
+const uploadDocs  = multer({ storage: docStorage,  limits: { fileSize: 10e6 }, fileFilter: docFilter });
+// Helper: buffer → base64 data URI
+const toDataUri = (file) => `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
 
 // ── Helpers ──────────────────────────────────────────────────
 const phoneHash = p => crypto.createHash('md5').update(p.trim()).digest('hex');
@@ -497,14 +501,22 @@ app.get('/admin/logout', (req, res) => { req.session.destroy(); res.redirect('/a
 // Cars CRUD
 app.post('/admin/cars/add', adminAuth, uploadImg.single('image'), async (req, res) => {
   const { name, model, pricePerKm, fixedKm, fixedPrice, extraKmCharge, tollTax, availableIn, seats, ac, description } = req.body;
-  await Car.create({ name, model, image: req.file ? '/uploads/' + req.file.filename : '/images/default-crysta.jpeg', pricePerKm: +pricePerKm, extraKmCharge: +extraKmCharge, fixedPackage: (fixedKm && fixedPrice) ? { km: +fixedKm, price: +fixedPrice } : undefined, tollTax: tollTax || 'As per actual', availableIn: availableIn ? availableIn.split(',').map(s => s.trim()) : ['Agra'], seats: +seats || 7, ac: ac === 'true', description });
+  const imgDataUri = req.file ? toDataUri(req.file) : null;
+  await Car.create({ name, model,
+    image: imgDataUri || '/images/default-crysta.jpeg',
+    imageData: imgDataUri || null,
+    pricePerKm: +pricePerKm, extraKmCharge: +extraKmCharge,
+    fixedPackage: (fixedKm && fixedPrice) ? { km: +fixedKm, price: +fixedPrice } : undefined,
+    tollTax: tollTax || 'As per actual',
+    availableIn: availableIn ? availableIn.split(',').map(s => s.trim()) : ['Agra'],
+    seats: +seats || 7, ac: ac === 'true', description });
   res.redirect('/admin');
 });
 app.get('/admin/cars/:id/edit', adminAuth, async (req, res) => { const car = await Car.findById(req.params.id); if (!car) return res.redirect('/admin'); res.render('admin/edit-car', { car }); });
 app.post('/admin/cars/:id/edit', adminAuth, uploadImg.single('image'), async (req, res) => {
   const { name, model, pricePerKm, fixedKm, fixedPrice, extraKmCharge, tollTax, availableIn, seats, ac, description } = req.body;
   const upd = { name, model, pricePerKm: +pricePerKm, extraKmCharge: +extraKmCharge, fixedPackage: (fixedKm && fixedPrice) ? { km: +fixedKm, price: +fixedPrice } : { km: 0, price: 0 }, tollTax, availableIn: availableIn ? availableIn.split(',').map(s => s.trim()) : ['Agra'], seats: +seats || 7, ac: ac === 'true', description };
-  if (req.file) upd.image = '/uploads/' + req.file.filename;
+  if (req.file) { const uri = toDataUri(req.file); upd.image = uri; upd.imageData = uri; }
   await Car.findByIdAndUpdate(req.params.id, upd); res.redirect('/admin');
 });
 app.post('/admin/cars/:id/toggle', adminAuth, async (req, res) => { const car = await Car.findById(req.params.id); if (car) { car.isActive = !car.isActive; await car.save(); } res.json({ success: true, isActive: car?.isActive ?? false }); });
@@ -561,6 +573,22 @@ app.post('/admin/bookings/:id/mark-payment-received', adminAuth, async (req, res
 
 // Push
 app.post('/admin/push', adminAuth, async (req, res) => { await pushAdmin(req.body.title, req.body.body); res.json({ success: true }); });
+
+// Partner Revenue page
+app.get('/admin/partner-revenue', adminAuth, async (req, res) => {
+  const partners = await CarPartner.find({ status: 'approved' }).lean();
+  // For each partner, get their completed bookings
+  const partnerStats = await Promise.all(partners.map(async p => {
+    const bookings = await Booking.find({
+      assignedPartner: p._id, status: 'completed'
+    }).lean();
+    const grossRevenue = bookings.reduce((s,b) => s + (b.finalFare||0) + (b.tollAmount||0), 0);
+    const commission   = bookings.reduce((s,b) => s + Math.round(((b.finalFare||0)+(b.tollAmount||0)) * (p.commissionPct||10)/100), 0);
+    const netEarning   = grossRevenue - commission;
+    return { ...p, bookings, grossRevenue, commission, netEarning, tripCount: bookings.length };
+  }));
+  res.render('admin/partner-revenue', { partnerStats });
+});
 
 // Chat admin
 app.get('/admin/chat/:sessionId/messages', adminAuth, async (req, res) => {

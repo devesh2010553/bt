@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cab Service in Agra | Brajwasi Tour & Travels – Taxi for Taj Mahal, Outstation</title>
-<meta name="description" content="Best cab service in Agra since 2018. Book cars now for Taj Mahal tours, Fatehpur Sikri, Agra to Delhi, Jaipur, Lucknow. 24/7 available. Call 9411061000.">
+<meta name="description" content="Best cab service in Agra since 2018. Book Toyota Innova Crysta for Taj Mahal tours, Fatehpur Sikri, Agra to Delhi, Jaipur, Lucknow. 24/7 available. Call 9411061000.">
 <meta name="keywords" content="cab service in agra, taxi in agra, agra cab booking, taj mahal cab, agra to delhi taxi, tour and travels agra, innova crysta agra, outstation cab agra, brajwasi travels">
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="Brajwasi Travels Agra | Tour and Travels in Agra">
@@ -136,7 +136,7 @@
       <% } else { cars.forEach(function(car){ var fkm=car.fixedPackage&&car.fixedPackage.km?car.fixedPackage.km:0; var fp=car.fixedPackage&&car.fixedPackage.price?car.fixedPackage.price:0; %>
       <div class="car-card">
         <div class="car-img-wrap">
-          <img src="<%= car.image %>" alt="<%= car.model %>" loading="lazy" onerror="this.src='/images/default-crysta.jpeg'">
+          <img src="<%= car.imageData || car.image %>" alt="<%= car.model %>" loading="lazy" onerror="this.src='/images/default-crysta.jpeg'">
           <div class="car-badge"><%= car.availableIn.join(', ') %></div>
           <% if(car.ac){ %><div class="ac-badge"><i class="fas fa-snowflake"></i> AC</div><% } %>
         </div>
@@ -506,6 +506,8 @@ function _resubPhone(phone) {
 function showModal(id) {
   var el = document.getElementById(id);
   if (el) { el.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+function openLoginModal() { showModal('loginModal'); }
+function toggleChat() { document.getElementById('chatBtn').click(); }
 }
 function hideModal(id) {
   var el = document.getElementById(id);
@@ -645,9 +647,9 @@ function renderLoginBar(user) {
     var bar = document.getElementById(ids[i]);
     if (!bar) continue;
     if (user) {
-      bar.innerHTML = '<span style="font-size:13px;color:#7A6A55"><i class="fas fa-user-circle" style="color:#B8780A;margin-right:5px"></i>' + _esc(user.name) + '</span><button onclick="logoutUser()" style="background:none;border:1px solid #E8DDD0;color:#7A6A55;padding:5px 11px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;margin-left:6px">Logout</button>';
+      bar.innerHTML = '<span style="font-size:13px;color:#7A6A55"><i class="fas fa-user-circle" style="color:#B8780A;margin-right:5px"></i>' + _esc(user.name) + '</span> <button onclick="logoutUser()" style="background:none;border:1px solid #E8DDD0;color:#7A6A55;padding:5px 11px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;margin-left:4px">Logout</button>';
     } else {
-      bar.innerHTML = '<button onclick="showModal('loginModal')" style="display:inline-flex;align-items:center;gap:6px;background:#FFF8EC;border:1px solid rgba(184,120,10,.3);color:#8A5A06;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit"><i class="fas fa-user-circle"></i>Login</button>';
+      bar.innerHTML = '<button onclick="openLoginModal()" style="display:inline-flex;align-items:center;gap:6px;background:#FFF8EC;border:1px solid rgba(184,120,10,.3);color:#8A5A06;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit"><i class="fas fa-user-circle"></i> Login</button>';
     }
   }
 }
