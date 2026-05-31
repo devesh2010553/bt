@@ -1,0 +1,14 @@
+{
+  "name": "Brajwasi Admin",
+  "short_name": "BT Admin",
+  "description": "Admin Panel – Brajwasi Tour & Travels",
+  "start_url": "/admin",
+  "scope": "/admin",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#B8780A",
+  "icons": [
+    { "src": "/images/favicon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/images/favicon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

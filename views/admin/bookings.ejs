@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bookings – Brajwasi Admin</title>
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--gold:#B8780A;--gold-light:#D4920E;--gold-dark:#8A5A06;--gold-bg:#FFF8EC;--gold-bg2:#FEF3DC;--bg:#FFFFFF;--bg-2:#F8F5F0;--bg-3:#F0EBE3;--border:#E8DDD0;--text:#1A1208;--text-muted:#7A6A55;--text-light:#A0917E;--green:#1A7A3A;--green-bg:#EAF7EE;--red:#C0392B;--red-bg:#FDEDEB;--blue:#1A5DAB;--blue-bg:#EEF4FF;--radius:10px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg-2);color:var(--text);}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:248px;background:var(--bg);border-right:1px solid var(--border);padding:0;display:flex;flex-direction:column;z-index:100;box-shadow:2px 0 10px rgba(184,120,10,.06);}
+.sidebar-brand{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.brand-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold-light),var(--gold-dark));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;overflow:hidden;}
+.brand-icon img{width:100%;height:100%;object-fit:cover;}
+.brand-name h1{font-family:'Playfair Display',serif;font-size:13px;color:var(--text);}
+.brand-name span{font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;color:var(--text-muted);text-decoration:none;font-size:13px;font-weight:500;transition:all .2s;border-radius:8px;margin:1px 8px;width:calc(100% - 16px);}
+.nav-item:hover{color:var(--gold-dark);background:var(--gold-bg);}
+.nav-item.active{color:var(--gold-dark);background:var(--gold-bg2);font-weight:700;}
+.nav-item i{width:17px;font-size:13px;color:var(--text-light);}
+.nav-item.active i{color:var(--gold);}
+.sidebar-body{padding:10px;flex:1;overflow-y:auto;}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border);}
+.main{margin-left:248px;min-height:100vh;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 6px rgba(184,120,10,.05);}
+.topbar h2{font-size:18px;font-weight:700;}
+.content{padding:24px;}
+.section-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(184,120,10,.08);}
+.section-head{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.section-head h3{font-size:15px;font-weight:700;}
+.filter-bar{padding:14px 22px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--bg-2);}
+.filter-bar input,.filter-bar select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--gold);}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{padding:11px 14px;text-align:left;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);font-weight:700;background:var(--bg-2);}
+td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg-2);}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-pending{background:var(--gold-bg2);color:var(--gold-dark);border:1px solid rgba(184,120,10,.3);}
+.badge-confirmed{background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.25);}
+.badge-cancelled{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.badge-completed{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(26,93,171,.25);}
+.advance-paid{background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.2);display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;}
+.advance-unpaid{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
+.btn-gold{background:linear-gradient(135deg,var(--gold-light),var(--gold-dark));color:#fff;}
+.btn-secondary{background:var(--bg-2);color:var(--text-muted);border:1px solid var(--border);}
+.btn-secondary:hover{color:var(--text);}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+select.status-select{background:var(--bg-2);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:7px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
+.empty-state{text-align:center;padding:60px;color:var(--text-light);}
+.empty-state i{font-size:38px;color:var(--border);margin-bottom:12px;display:block;}
+@media(max-width:900px){.sidebar{display:none;}.main{margin-left:0;}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon"><img src="/images/favicon.png" alt="BT" onerror="this.style.display='none';this.parentNode.innerHTML='<i class=\'fas fa-car\'></i>'"></div>
+    <div class="brand-name"><h1>Brajwasi Tour & Travels</h1><span>Admin Panel</span></div>
+  </div>
+  <div class="sidebar-body">
+    <a href="/admin" class="nav-item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+    <a href="/admin/bookings" class="nav-item active"><i class="fas fa-calendar-check"></i> All Bookings</a>
+    <a href="/admin" class="nav-item"><i class="fas fa-car-side"></i> Fleet</a>
+    <a href="/admin" class="nav-item"><i class="fas fa-comments"></i> Live Chats</a>
+  </div>
+  <div class="sidebar-footer">
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-external-link-alt"></i> View Website</a>
+    <a href="/admin/logout" class="nav-item" style="color:var(--red)"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <h2><i class="fas fa-calendar-check" style="color:var(--gold);margin-right:8px"></i>All Bookings</h2>
+    <div style="display:flex;gap:10px">
+      <a href="/admin" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+  </div>
+  <div class="content">
+    <div class="section-card">
+      <div class="section-head">
+        <h3>Bookings (<%= bookings.length %> total)</h3>
+        <span style="font-size:12px;color:var(--text-muted)">Click status to update</span>
+      </div>
+      <div class="filter-bar">
+        <input type="text" id="searchInput" placeholder="🔍 Search by name, phone, ID..." oninput="filterBookings()" style="min-width:240px">
+        <select id="statusFilter" onchange="filterBookings()">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table id="bookingsTable">
+          <thead>
+            <tr><th>Booking ID</th><th>Customer</th><th>Car</th><th>Route</th><th>Date/Time</th><th>Fare</th><th>Advance</th><th>Status</th><th>Assign Partner</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            <% if(!bookings.length){ %>
+            <tr><td colspan="9"><div class="empty-state"><i class="fas fa-calendar-times"></i><p>No bookings yet</p></div></td></tr>
+            <% }else{ bookings.forEach(b=>{ %>
+            <tr data-status="<%= b.status %>" data-search="<%= b.bookingId %> <%= b.customerName %> <%= b.customerPhone %> <%= b.carName %>">
+              <td style="font-weight:800;color:var(--gold-dark);font-family:monospace;font-size:12px"><%= b.bookingId %></td>
+              <td>
+                <div style="font-weight:600"><%= b.customerName %></div>
+                <div style="font-size:11px;color:var(--text-muted)"><%= b.customerPhone %></div>
+                <% if(b.customerEmail){ %><div style="font-size:11px;color:var(--text-light)"><%= b.customerEmail %></div><% } %>
+              </td>
+              <td style="font-size:12px;font-weight:600"><%= b.carName||'N/A' %></td>
+              <td style="font-size:12px">
+                <div style="color:var(--text)"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:3px"></i><%= b.pickupLocation %></div>
+                <div style="color:var(--text-muted);margin-top:2px"><i class="fas fa-flag" style="color:var(--red);margin-right:3px"></i><%= b.dropLocation %></div>
+                <% if(b.estimatedKm){ %><div style="font-size:11px;color:var(--text-light);margin-top:2px"><i class="fas fa-road" style="margin-right:3px"></i><%= b.estimatedKm %> km</div><% } %>
+              </td>
+              <td style="font-size:12px">
+                <div style="font-weight:600"><%= new Date(b.journeyDate).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) %></div>
+                <div style="color:var(--text-muted)"><i class="fas fa-clock" style="margin-right:3px"></i><%= b.journeyTime %></div>
+              </td>
+              <td style="color:var(--green);font-weight:800;font-size:14px"><% if(b.totalPrice){ %>₹<%= b.totalPrice.toLocaleString('en-IN') %><% }else{ %><span style="color:var(--text-muted);font-weight:400;font-size:12px">TBD</span><% } %></td>
+              <td><span class="<%= b.advancePaid?'advance-paid':'advance-unpaid' %>"><%= b.advancePaid?'✓ Paid':'✗ Pending' %></span></td>
+              <td>
+                <form method="POST" action="/admin/bookings/<%= b._id %>/status">
+                  <select name="status" class="status-select" onchange="this.form.submit()">
+                    <option value="pending" <%= b.status==='pending'?'selected':'' %>>⏳ Pending</option>
+                    <option value="confirmed" <%= b.status==='confirmed'?'selected':'' %>>✅ Confirmed</option>
+                    <option value="completed" <%= b.status==='completed'?'selected':'' %>>🏁 Completed</option>
+                    <option value="cancelled" <%= b.status==='cancelled'?'selected':'' %>>❌ Cancelled</option>
+                  </select>
+                </form>
+              </td>
+              <td>
+                <% if(typeof partners !== 'undefined' && partners.length){ %>
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                  <% if(b.assignedPartnerName){ %>
+                  <span style="font-size:11px;color:var(--green);font-weight:600"><i class="fas fa-check-circle"></i> <%= b.assignedPartnerName %></span>
+                  <% } else { %>
+                  <select id="assign-<%= b._id %>" class="status-select" style="min-width:150px">
+                    <option value="">— Assign Partner —</option>
+                    <% partners.forEach(p => { %><option value="<%= p._id %>"><%= p.ownerName %> (<%= p.carModel %>)</option><% }) %>
+                  </select>
+                  <button class="btn" style="background:var(--blue-bg);color:var(--blue);border:1px solid rgba(26,93,171,.2);padding:5px 10px;font-size:11px" onclick="assignPartner('<%= b._id %>')"><i class="fas fa-paper-plane"></i> Assign</button>
+                  <% } %>
+                </div>
+                <% } else { %>
+                <span style="font-size:12px;color:var(--light)">No approved partners</span>
+                <% } %>
+              </td>
+              <td>
+                <a href="https://wa.me/91<%= b.customerPhone %>?text=<%= encodeURIComponent('Hello '+b.customerName+', your booking '+b.bookingId+' with Brajwasi Tour & Travels is confirmed. Journey on '+new Date(b.journeyDate).toLocaleDateString('en-IN')+' at '+b.journeyTime+'. For queries: 9411061000') %>" target="_blank" class="btn" style="background:#EAF7EE;color:#1A7A3A;border:1px solid rgba(26,122,58,.2)">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+                <% if(b.advancePaid && !b.advanceConfirmedByAdmin){ %>
+                <button class="btn" style="background:#EEF4FF;color:#1A5DAB;border:1px solid rgba(26,93,171,.2);font-size:11px" onclick="confirmAdvance('<%= b._id %>')"><i class="fas fa-check-double"></i> Confirm ₹500 Advance</button>
+                <% } %>
+                <% if(b.status==='completed' && !b.paymentReceivedByAdmin){ %>
+                <button class="btn" style="background:#EAF7EE;color:#1A7A3A;border:1px solid rgba(26,122,58,.2);font-size:11px;margin-top:4px" onclick="markPaymentReceived('<%= b._id %>')"><i class="fas fa-money-bill-wave"></i> Mark Full Payment Received</button>
+                <% } %>
+                <% if(b.paymentReceivedByAdmin){ %>
+                <div style="font-size:11px;color:#1A7A3A;font-weight:700;margin-top:2px"><i class="fas fa-check-circle"></i> Full Payment Received</div>
+                <% } %>
+                <% if(b.status==='completed'){ %>
+                <div style="font-size:11px;color:#7A6A55;margin-top:4px">
+                  <% const bFare = b.finalFare||b.totalPrice||0; const bToll = b.tollAmount||0; const bComm = b.assignedPartner ? Math.round((bFare+bToll)*0.10) : 0; %>
+                  Fare: ₹<%= bFare.toLocaleString('en-IN') %><% if(bToll){ %> + Toll: ₹<%= bToll.toLocaleString('en-IN') %><% } %>
+                  <% if(bComm){ %><br><span style="color:#C0392B">Commission: ₹<%= bComm.toLocaleString('en-IN') %></span><% } %>
+                </div>
+                <% } %>
+                <% if(b.status==='confirmed'){ %>
+                <button class="btn" style="background:#FDEDEB;color:#C0392B;border:1px solid rgba(192,57,43,.2);font-size:11px" onclick="markLate('<%= b._id %>')"><i class="fas fa-clock"></i> Late Alert</button>
+                <% } %>
+              </td>
+            </tr>
+            <% })} %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+function filterBookings() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const status = document.getElementById('statusFilter').value;
+  document.querySelectorAll('#bookingsTable tbody tr[data-status]').forEach(row => {
+    const matchSearch = !q || row.dataset.search.toLowerCase().includes(q);
+    const matchStatus = !status || row.dataset.status === status;
+    row.style.display = (matchSearch && matchStatus) ? '' : 'none';
+  });
+}
+
+async function markPaymentReceived(id) {
+  if (!confirm('Confirm full payment received from customer?')) return;
+  const r = await fetch('/admin/bookings/' + id + '/mark-payment-received', { method: 'POST' });
+  const d = await r.json();
+  if (d.success) { alert('Payment confirmed! Customer notified.'); location.reload(); }
+  else alert(d.error || 'Failed');
+}
+async function confirmAdvance(id) {
+  if (!confirm('Confirm ₹500 advance payment for this booking? This will mark it as received and reduce customer balance.')) return;
+  const r = await fetch('/admin/bookings/' + id + '/confirm-advance', { method: 'POST' });
+  const d = await r.json();
+  if (d.success) { alert('Advance confirmed!'); location.reload(); }
+  else alert(d.error || 'Failed');
+}
+async function markLate(id) {
+  if (!confirm('Send late-delay notification to customer? (If car is >30 mins late, customer gets full refund on cancellation)')) return;
+  const r = await fetch('/admin/bookings/' + id + '/mark-late', { method: 'POST' });
+  const d = await r.json();
+  if (d.success) alert('Late notification sent to customer.');
+  else alert(d.error || 'Failed');
+}
+async function assignPartner(bookingId) {
+  const sel = document.getElementById('assign-' + bookingId);
+  const partnerId = sel?.value;
+  if (!partnerId) { alert('Please select a partner first'); return; }
+  const btn = sel.nextElementSibling;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
+  try {
+    const r = await fetch('/admin/bookings/' + bookingId + '/assign', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ partnerId })
+    });
+    const d = await r.json();
+    if (d.success) {
+      const cell = sel.closest('td');
+      cell.innerHTML = '<span style="font-size:11px;color:var(--green);font-weight:600"><i class="fas fa-check-circle"></i> ' + d.assignedPartnerName + '</span>';
+      alert('Partner assigned! Email notification sent to partner.');
+    } else { alert('Failed to assign: ' + (d.error || 'Unknown error')); btn.innerHTML = '<i class="fas fa-paper-plane"></i> Assign'; btn.disabled = false; }
+  } catch(e) { alert('Error: ' + e.message); btn.innerHTML = '<i class="fas fa-paper-plane"></i> Assign'; btn.disabled = false; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Brajwasi Tour & Travels</title>
+<link rel="manifest" href="/admin-manifest.json">
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<link rel="apple-touch-icon" href="/images/favicon.png">
+<meta name="theme-color" content="#B8780A">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --gold:#B8780A; --gold-light:#D4920E; --gold-dark:#8A5A06;
+  --gold-bg:#FFF8EC; --gold-bg2:#FEF3DC;
+  --bg:#FFFFFF; --bg-2:#F8F5F0; --bg-3:#F0EBE3;
+  --border:#E8DDD0; --text:#1A1208; --text-muted:#7A6A55; --text-light:#A0917E;
+  --green:#1A7A3A; --green-bg:#EAF7EE;
+  --red:#C0392B; --red-bg:#FDEDEB;
+  --blue:#1A5DAB; --blue-bg:#EEF4FF;
+  --shadow:0 2px 12px rgba(184,120,10,0.10);
+  --shadow-lg:0 8px 32px rgba(184,120,10,0.14);
+  --radius:10px; --radius-lg:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg-2);color:var(--text);min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:248px;background:var(--bg);border-right:1px solid var(--border);padding:0;display:flex;flex-direction:column;z-index:100;box-shadow:2px 0 12px rgba(184,120,10,0.07);}
+.sidebar-brand{padding:20px 20px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.sidebar-brand .brand-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold-light),var(--gold-dark));border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;overflow:hidden;flex-shrink:0;}
+.sidebar-brand .brand-icon img{width:100%;height:100%;object-fit:cover;border-radius:9px;}
+.sidebar-brand h1{font-family:'Playfair Display',serif;font-size:14px;color:var(--text);line-height:1.3;}
+.sidebar-brand span{font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;}
+.nav-section{padding:10px 12px 4px;font-size:10px;color:var(--text-light);letter-spacing:2px;text-transform:uppercase;font-weight:700;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;color:var(--text-muted);text-decoration:none;font-size:13.5px;font-weight:500;transition:all .2s;cursor:pointer;border:none;background:none;width:100%;text-align:left;border-radius:8px;margin:1px 8px;width:calc(100% - 16px);position:relative;}
+.nav-item:hover{color:var(--gold-dark);background:var(--gold-bg);}
+.nav-item.active{color:var(--gold-dark);background:var(--gold-bg2);font-weight:700;}
+.nav-item i{width:18px;font-size:13px;color:var(--text-light);}
+.nav-item.active i,.nav-item:hover i{color:var(--gold);}
+.nav-badge{position:absolute;right:12px;background:var(--red);color:#fff;border-radius:10px;font-size:10px;font-weight:800;padding:2px 7px;min-width:18px;text-align:center;}
+.sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border);}
+
+/* MAIN */
+.main{margin-left:248px;min-height:100vh;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 6px rgba(184,120,10,0.06);}
+.topbar h2{font-size:18px;font-weight:700;color:var(--text);}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.content{padding:24px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:24px;}
+.stat-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px;box-shadow:var(--shadow);}
+.stat-card .stat-label{font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
+.stat-card .stat-num{font-family:'Playfair Display',serif;font-size:34px;color:var(--text);font-weight:700;}
+.stat-card .stat-icon{float:right;width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.si-gold{background:var(--gold-bg2);color:var(--gold);}
+.si-green{background:var(--green-bg);color:var(--green);}
+.si-blue{background:var(--blue-bg);color:var(--blue);}
+.si-red{background:var(--red-bg);color:var(--red);}
+
+/* CARDS */
+.section-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:24px;box-shadow:var(--shadow);}
+.section-head{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg);}
+.section-head h3{font-size:15px;font-weight:700;color:var(--text);}
+
+/* FORMS */
+.add-car-form{padding:22px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{margin-bottom:0;}
+.form-group.full{grid-column:1/-1;}
+label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+input[type=text],input[type=number],input[type=file],input[type=email],textarea,select{width:100%;background:var(--bg-2);border:1px solid var(--border);color:var(--text);padding:9px 13px;border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:all .2s;}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,120,10,0.08);}
+select option{background:var(--bg);}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{padding:11px 16px;text-align:left;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);font-weight:700;background:var(--bg-2);}
+td{padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg-2);}
+.car-img-thumb{width:80px;height:52px;object-fit:cover;border-radius:8px;border:1px solid var(--border);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-active{background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.25);}
+.badge-inactive{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.badge-pending{background:var(--gold-bg2);color:var(--gold-dark);border:1px solid rgba(184,120,10,.3);}
+.badge-confirmed{background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.25);}
+.badge-cancelled{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.badge-completed{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(26,93,171,.25);}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .2s;text-decoration:none;font-family:'DM Sans',sans-serif;}
+.btn-gold{background:linear-gradient(135deg,var(--gold-light),var(--gold-dark));color:#fff;box-shadow:0 2px 8px rgba(184,120,10,.25);}
+.btn-gold:hover{opacity:.9;transform:translateY(-1px);}
+.btn-sm{padding:5px 11px;font-size:11px;}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+.btn-danger:hover{background:var(--red);color:#fff;}
+.btn-secondary{background:var(--bg-2);color:var(--text-muted);border:1px solid var(--border);}
+.btn-secondary:hover{color:var(--text);border-color:var(--gold);}
+.btn-blue{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(26,93,171,.2);}
+.btn-blue:hover{background:var(--blue);color:#fff;}
+.btn-green{background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.2);}
+.btn-green:hover{background:var(--green);color:#fff;}
+
+/* TOGGLE */
+.toggle-switch{position:relative;display:inline-block;width:40px;height:21px;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--red-bg);border-radius:21px;transition:.3s;border:1px solid rgba(192,57,43,.3);}
+.toggle-slider:before{position:absolute;content:"";height:15px;width:15px;left:2px;bottom:2px;background:var(--red);border-radius:50%;transition:.3s;}
+input:checked+.toggle-slider{background:var(--green-bg);border-color:rgba(26,122,58,.3);}
+input:checked+.toggle-slider:before{transform:translateX(19px);background:var(--green);}
+.toggle-wrap{display:flex;align-items:center;gap:8px;}
+.toggle-label{font-size:12px;color:var(--text-muted);}
+
+/* PANEL TABS */
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* CHAT */
+.chat-layout{display:grid;grid-template-columns:260px 1fr;height:580px;}
+.chat-sidebar{border-right:1px solid var(--border);overflow-y:auto;background:var(--bg-2);}
+.chat-list-item{padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .2s;display:flex;gap:11px;align-items:flex-start;}
+.chat-list-item:hover,.chat-list-item.active{background:var(--gold-bg);}
+.chat-avatar{width:36px;height:36px;min-width:36px;background:linear-gradient(135deg,var(--gold-light),var(--gold-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;}
+.chat-list-name{font-size:13px;font-weight:700;color:var(--text);}
+.chat-list-preview{font-size:11px;color:var(--text-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:155px;}
+.chat-list-time{font-size:10px;color:var(--text-light);flex-shrink:0;}
+.unread-dot{width:8px;height:8px;background:var(--blue);border-radius:50%;margin-top:5px;flex-shrink:0;}
+.chat-main{display:flex;flex-direction:column;background:var(--bg);}
+.chat-topbar{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg);}
+.chat-messages-area{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--bg-2);}
+.chat-bubble{max-width:72%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;word-break:break-word;}
+.chat-bubble.customer{background:var(--bg);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.chat-bubble.admin{background:linear-gradient(135deg,var(--gold-light),var(--gold-dark));color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+.bubble-text{word-break:break-word;line-height:1.5;}
+.bubble-time{font-size:10px;opacity:.6;margin-top:4px;}
+.chat-reply-row{display:flex;gap:10px;padding:13px 16px;border-top:1px solid var(--border);background:var(--bg);}
+.chat-reply-row input{flex:1;background:var(--bg-2);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
+.chat-reply-row input:focus{border-color:var(--gold);}
+.chat-placeholder{display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-light);flex-direction:column;gap:10px;}
+.chat-placeholder i{font-size:40px;color:var(--border);}
+.chat-actions{display:flex;gap:8px;align-items:center;}
+
+/* PUSH FORM */
+.push-form{padding:22px;}
+
+/* ADVANCE TAG */
+.advance-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700;}
+.advance-paid{background:var(--green-bg);color:var(--green);border:1px solid rgba(26,122,58,.2);}
+.advance-unpaid{background:var(--red-bg);color:var(--red);border:1px solid rgba(192,57,43,.2);}
+
+/* ALERT */
+.alert{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:18px;}
+.alert-success{background:var(--green-bg);border:1px solid rgba(26,122,58,.25);color:var(--green);}
+.empty-state{text-align:center;padding:48px;color:var(--text-light);}
+.empty-state i{font-size:38px;color:var(--border);margin-bottom:12px;display:block;}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:transform .3s;}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .chat-layout{grid-template-columns:1fr;height:auto;}
+  .chat-sidebar{height:240px;border-right:none;border-bottom:1px solid var(--border);}
+}
+@media(max-width:600px){.stats-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div id="sidebarOverlay" onclick="closeSidebar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:99;backdrop-filter:blur(2px)"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand" style="justify-content:space-between">
+    <div class="brand-icon">
+      <img src="/images/favicon.png" alt="BT" onerror="this.style.display='none';this.parentNode.innerHTML='<i class=\'fas fa-car\'></i>'">
+    </div>
+    <div>
+      <h1>Brajwasi Tour & Travels</h1>
+      <span>Admin Panel</span>
+    </div>
+  </div>
+
+  <div style="padding:10px 12px;flex:1;overflow-y:auto;">
+    <div class="nav-section">Main</div>
+    <button class="nav-item active" onclick="showTab('dashboard',this)"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+    <a href="/admin/bookings" class="nav-item"><i class="fas fa-calendar-check"></i> All Bookings</a>
+    <a href="/admin/partners" class="nav-item"><i class="fas fa-handshake"></i> Partners</a>
+    <a href="/admin/partner-revenue" class="nav-item"><i class="fas fa-chart-bar"></i> Partner Revenue <% if(stats.pendingPartners > 0){ %><span class="nav-badge"><%= stats.pendingPartners %></span><% } %></a>
+    <a href="/admin/testimonials" class="nav-item"><i class="fas fa-star"></i> Reviews <% if(stats.testimonialsPending > 0){ %><span class="nav-badge"><%= stats.testimonialsPending %></span><% } %></a>
+
+    <div class="nav-section" style="margin-top:8px">Fleet</div>
+    <button class="nav-item" onclick="showTab('add-car',this)"><i class="fas fa-plus-circle"></i> Add New Car</button>
+    <button class="nav-item" onclick="showTab('fleet',this)"><i class="fas fa-car-side"></i> Manage Fleet</button>
+
+    <div class="nav-section" style="margin-top:8px">Communication</div>
+    <button class="nav-item" onclick="showTab('chat',this)">
+      <i class="fas fa-comments"></i> Live Chats
+      <span id="chatNavBadge" style="display:none;background:#ef4444;color:#fff;border-radius:20px;font-size:10px;font-weight:800;padding:2px 7px;margin-left:4px;min-width:18px;text-align:center"></span>
+    </button>
+    <button class="nav-item" onclick="showTab('push',this)"><i class="fas fa-bell"></i> Push Notifications</button>
+  </div>
+
+  <div class="sidebar-footer">
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-external-link-alt"></i> View Website</a>
+    <a href="/admin/logout" class="nav-item" style="color:var(--red)"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button onclick="toggleSidebar()" id="menu-btn" style="display:none;background:none;border:1px solid var(--border);color:var(--gold);width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:15px"><i class="fas fa-bars"></i></button>
+      <h2 id="page-title">Dashboard</h2>
+    </div>
+    <div class="topbar-right">
+      <a href="tel:9411061000" class="btn btn-secondary btn-sm"><i class="fas fa-phone"></i> 9411061000</a>
+      <a href="/admin/logout" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="tab-panel active">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon si-gold" style="float:right"><i class="fas fa-car"></i></div><div class="stat-label">Active Cars</div><div class="stat-num"><%= stats.totalCars %></div></div>
+        <div class="stat-card"><div class="stat-icon si-blue" style="float:right"><i class="fas fa-calendar-check"></i></div><div class="stat-label">Total Bookings</div><div class="stat-num"><%= stats.totalBookings %></div></div>
+        <div class="stat-card"><div class="stat-icon si-red" style="float:right"><i class="fas fa-clock"></i></div><div class="stat-label">Pending</div><div class="stat-num"><%= stats.pendingBookings %></div></div>
+        <div class="stat-card"><div class="stat-icon si-green" style="float:right"><i class="fas fa-check"></i></div><div class="stat-label">Confirmed</div><div class="stat-num"><%= stats.confirmedBookings %></div></div>
+        <div class="stat-card" style="border-left:3px solid #1A7A3A"><div class="stat-icon si-green" style="float:right"><i class="fas fa-rupee-sign"></i></div><div class="stat-label">Total Revenue</div><div class="stat-num" style="color:#1A7A3A">₹<%= (stats.totalRevenue||0).toLocaleString('en-IN') %></div></div>
+        <div class="stat-card" style="border-left:3px solid #B8780A"><div class="stat-icon si-gold" style="float:right"><i class="fas fa-percent"></i></div><div class="stat-label">Admin Earnings</div><div class="stat-num" style="color:#B8780A">₹<%= (stats.adminCommission||0).toLocaleString('en-IN') %></div></div>
+        <div class="stat-card" style="border-left:3px solid #1A5DAB"><div class="stat-icon si-blue" style="float:right"><i class="fas fa-handshake"></i></div><div class="stat-label">Partner Payouts</div><div class="stat-num" style="color:#1A5DAB">₹<%= (stats.partnerPayouts||0).toLocaleString('en-IN') %></div></div>
+        <div class="stat-card"><div class="stat-icon si-blue" style="float:right"><i class="fas fa-flag-checkered"></i></div><div class="stat-label">Completed Trips</div><div class="stat-num"><%= stats.completedBookings||0 %></div></div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-head"><h3><i class="fas fa-clock" style="color:var(--gold);margin-right:7px"></i>Recent Bookings</h3><a href="/admin/bookings" class="btn btn-secondary btn-sm">View All</a></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Booking ID</th><th>Customer</th><th>Car</th><th>Route</th><th>Date</th><th>Fare</th><th>Advance</th><th>Status</th></tr></thead>
+            <tbody>
+              <% if(!bookings.length){ %>
+              <tr><td colspan="8"><div class="empty-state"><i class="fas fa-calendar-times"></i><p>No bookings yet</p></div></td></tr>
+              <% } else { bookings.forEach(b => { %>
+              <tr>
+                <td style="font-weight:800;color:var(--gold-dark);font-family:monospace;font-size:12px"><%= b.bookingId %></td>
+                <td><div style="font-weight:600"><%= b.customerName %></div><div style="font-size:11px;color:var(--text-muted)"><%= b.customerPhone %></div></td>
+                <td style="font-size:12px"><%= b.carName||'N/A' %></td>
+                <td style="font-size:12px;color:var(--text-muted)"><%= b.pickupLocation %> → <%= b.dropLocation %></td>
+                <td style="font-size:12px"><%= new Date(b.journeyDate).toLocaleDateString('en-IN') %></td>
+                <td style="color:var(--green);font-weight:700"><% if(b.totalPrice){ %>₹<%= b.totalPrice.toLocaleString('en-IN') %><% }else{ %>TBD<% } %></td>
+                <td><span class="advance-tag <%= b.advancePaid?'advance-paid':'advance-unpaid' %>"><%= b.advancePaid?'✓ Paid':'✗ Pending' %></span></td>
+                <td><span class="badge badge-<%= b.status %>"><%= b.status %></span></td>
+              </tr>
+              <% })} %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD CAR -->
+    <div id="tab-add-car" class="tab-panel">
+      <div class="section-card">
+        <div class="section-head"><h3><i class="fas fa-plus-circle" style="color:var(--gold);margin-right:7px"></i>Add New Car to Fleet</h3></div>
+        <form class="add-car-form" method="POST" action="/admin/cars/add" enctype="multipart/form-data">
+          <div class="form-grid">
+            <div class="form-group"><label>Car Brand *</label><input type="text" name="name" placeholder="e.g. Toyota" required></div>
+            <div class="form-group"><label>Car Model *</label><input type="text" name="model" placeholder="e.g. Innova Crysta" required></div>
+            <div class="form-group"><label>Car Photo *</label><input type="file" name="image" accept="image/*" required></div>
+            <div class="form-group"><label>Available In</label><input type="text" name="availableIn" placeholder="Agra, Delhi" value="Agra"></div>
+            <div class="form-group"><label>Price Per KM (₹) *</label><input type="number" name="pricePerKm" placeholder="12" required min="1"></div>
+            <div class="form-group"><label>Extra KM Charge (₹) *</label><input type="number" name="extraKmCharge" placeholder="12" required min="1"></div>
+            <div class="form-group"><label>Fixed Package KM</label><input type="number" name="fixedKm" placeholder="300 (optional)"></div>
+            <div class="form-group"><label>Fixed Package Price (₹)</label><input type="number" name="fixedPrice" placeholder="3200 (optional)"></div>
+            <div class="form-group"><label>Toll Tax Info</label><input type="text" name="tollTax" value="As per actual (paid by customer)"></div>
+            <div class="form-group"><label>Seating Capacity</label><select name="seats"><option value="4">4 Seater</option><option value="5">5 Seater</option><option value="6">6 Seater</option><option value="7" selected>7 Seater</option><option value="8">8 Seater</option><option value="12">12 Seater</option></select></div>
+            <div class="form-group"><label>Air Conditioning</label><select name="ac"><option value="true">AC ✅</option><option value="false">Non-AC</option></select></div>
+            <div class="form-group full"><label>Description</label><textarea name="description" rows="3" placeholder="Describe the vehicle..."></textarea></div>
+          </div>
+          <div style="margin-top:18px"><button type="submit" class="btn btn-gold"><i class="fas fa-plus"></i> Add Car to Fleet</button></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- FLEET -->
+    <div id="tab-fleet" class="tab-panel">
+      <div class="section-card">
+        <div class="section-head"><h3><i class="fas fa-car-side" style="color:var(--gold);margin-right:7px"></i>Fleet (<%= cars.length %> cars)</h3><button onclick="showTab('add-car')" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Add Car</button></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Photo</th><th>Car</th><th>Pricing</th><th>Package</th><th>Location</th><th>Available</th><th>Actions</th></tr></thead>
+            <tbody>
+              <% if(!cars.length){ %>
+              <tr><td colspan="7"><div class="empty-state"><i class="fas fa-car"></i><p>No cars added yet</p></div></td></tr>
+              <% } else { cars.forEach(car => { %>
+              <tr id="car-row-<%= car._id %>">
+                <td><img src="<%= car.imageData || car.image %>" class="car-img-thumb" onerror="this.src='/images/default-crysta.jpeg'" alt="<%= car.model %>"></td>
+                <td><div style="font-weight:700"><%= car.model %></div><div style="font-size:11px;color:var(--text-muted)"><%= car.name %> · <%= car.seats %> Seats<%= car.ac?' · AC':'' %></div></td>
+                <td><div style="font-weight:700;color:var(--gold-dark)">₹<%= car.pricePerKm %>/km</div><div style="font-size:11px;color:var(--text-muted)">Extra: ₹<%= car.extraKmCharge %>/km</div></td>
+                <td><% if(car.fixedPackage&&car.fixedPackage.km){ %><div style="font-weight:700;color:var(--green)">₹<%= car.fixedPackage.price %></div><div style="font-size:11px;color:var(--text-muted)">for <%= car.fixedPackage.km %>km</div><% }else{ %><span style="color:var(--text-light);font-size:12px">No package</span><% } %></td>
+                <td style="font-size:12px;color:var(--text-muted)"><%= car.availableIn.join(', ') %></td>
+                <td>
+                  <div class="toggle-wrap">
+                    <label class="toggle-switch">
+                      <input type="checkbox" <%= car.isActive?'checked':'' %> onchange="toggleCar('<%= car._id %>',this)">
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label" id="toggle-label-<%= car._id %>"><%= car.isActive?'Active':'Off' %></span>
+                  </div>
+                </td>
+                <td>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <a href="/admin/cars/<%= car._id %>/edit" class="btn btn-blue btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                    <form method="POST" action="/admin/cars/<%= car._id %>/delete" style="display:inline" onsubmit="return confirm('Delete this car?')">
+                      <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              <% })} %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div id="tab-chat" class="tab-panel">
+      <div class="section-card">
+        <div class="section-head">
+          <h3><i class="fas fa-comments" style="color:var(--gold);margin-right:7px"></i>Customer Chats</h3>
+          <span style="font-size:12px;color:var(--text-muted)"><%= chatSessions.length %> conversations</span>
+        </div>
+        <div class="chat-layout">
+          <div class="chat-sidebar" id="chatSessionList">
+            <% if(!chatSessions.length){ %>
+            <div class="empty-state" style="padding:30px"><i class="fas fa-comment-slash"></i><p>No chats yet</p></div>
+            <% } else { chatSessions.forEach(s => { %>
+            <div class="chat-list-item" onclick="loadAdminChat('<%= s._id %>','<%= s.customerName %>','<%= s.customerPhone %>')" id="chat-item-<%= s._id %>">
+              <div class="chat-avatar"><%= s.customerName.charAt(0).toUpperCase() %></div>
+              <div style="flex:1;min-width:0">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="chat-list-name"><%= s.customerName %></span>
+                  <span class="chat-list-time"><%= new Date(s.lastTime).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}) %></span>
+                </div>
+                <div style="font-size:11px;color:var(--text-light);margin-top:1px"><%= s.customerPhone %></div>
+                <div class="chat-list-preview"><%= s.lastMessage %></div>
+              </div>
+              <% if(s.totalUnread>0){ %><div style="min-width:20px;height:20px;background:#ef4444;color:#fff;border-radius:20px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 5px;margin-left:4px;flex-shrink:0"><%= s.totalUnread>9?'9+':s.totalUnread %></div><% } %>
+            </div>
+            <% })} %>
+          </div>
+          <div class="chat-main" id="chatMainArea">
+            <div class="chat-placeholder"><i class="fas fa-hand-pointer"></i><p>Select a conversation</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PUSH -->
+    <div id="tab-push" class="tab-panel">
+      <div class="section-card">
+        <div class="section-head"><h3><i class="fas fa-bell" style="color:var(--gold);margin-right:7px"></i>Send Push Notification</h3></div>
+        <div class="push-form">
+          <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px">Send to all subscribed users — works even when browser is closed.</p>
+          <div class="form-grid">
+            <div class="form-group"><label>Title *</label><input type="text" id="push-title" value="🚗 Brajwasi Tour & Travels"></div>
+            <div class="form-group"><label>Message *</label><input type="text" id="push-body" placeholder="e.g. Special offer this weekend!"></div>
+          </div>
+          <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-gold" onclick="sendPush()"><i class="fas fa-paper-plane"></i> Send to All</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('push-body').value='🎉 Special offer: 10% off on all bookings this weekend!'"><i class="fas fa-tag"></i> Offer Template</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('push-body').value='📞 Please confirm your booking. Call: 9411061000'"><i class="fas fa-phone"></i> Reminder</button>
+          </div>
+          <div id="push-result" style="margin-top:16px"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// PWA: register service worker for admin push
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+    console.log('Admin SW registered');
+  }).catch(() => {});
+}
+
+// Request push permission on load for admin
+async function initAdminPush() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    const p = await Notification.requestPermission();
+    if (p === 'granted') subscribeAdminPush();
+  } else if (Notification.permission === 'granted') {
+    subscribeAdminPush();
+  }
+}
+async function subscribeAdminPush() {
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const resp = await fetch('/vapid-public-key');
+    const { publicKey } = await resp.json();
+    if (!publicKey) return;
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicKey)
+    });
+    // role:'admin' ensures only admin devices get booking/chat notifications
+    const subData = JSON.parse(JSON.stringify(sub));
+    subData.role = 'admin';
+    subData.phone = '';
+    await fetch('/subscribe', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(subData) });
+    console.log('Admin push notifications enabled');
+  } catch(e) { console.log('Admin push error:', e); }
+}
+function urlBase64ToUint8Array(base64) {
+  const padding = '='.repeat((4 - base64.length % 4) % 4);
+  const b64 = (base64 + padding).replace(/-/g,'+').replace(/_/g,'/');
+  const raw = window.atob(b64);
+  const arr = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
+initAdminPush();
+
+function showTab(name, el) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('tab-' + name)?.classList.add('active');
+  const titles = { dashboard:'Dashboard', 'add-car':'Add New Car', fleet:'Fleet Management', chat:'Live Chats', push:'Push Notifications' };
+  document.getElementById('page-title').textContent = titles[name] || name;
+  (el || document.querySelector(`[onclick*="'${name}'"]`))?.classList.add('active');
+}
+
+async function toggleCar(carId, cb) {
+  try {
+    const r = await fetch('/admin/cars/' + carId + '/toggle', { method: 'POST' });
+    const d = await r.json();
+    document.getElementById('toggle-label-' + carId).textContent = d.isActive ? 'Active' : 'Off';
+  } catch(e) { cb.checked = !cb.checked; alert('Failed'); }
+}
+
+async function sendPush() {
+  const title = document.getElementById('push-title').value;
+  const body = document.getElementById('push-body').value;
+  if (!title || !body) return alert('Fill in both fields');
+  const btn = event.target; btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+  try {
+    await fetch('/admin/push', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({title,body}) });
+    const r = document.getElementById('push-result');
+    r.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> Sent successfully!</div>';
+    setTimeout(() => r.innerHTML = '', 4000);
+  } catch(e) { alert('Failed'); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send to All'; }
+}
+
+// ── Admin Chat ───────────────────────────────────────────────
+let activeChatSession = null;
+let activeChatName = '';
+let activeChatPhone = '';
+let lastAdminMsgTime = null;
+let adminChatPollInterval = null;
+
+async function loadAdminChat(sessionId, name, phone) {
+  // Stop any existing poll
+  stopAdminChatPoll();
+
+  activeChatSession = sessionId;
+  activeChatName = name;
+  activeChatPhone = phone;
+
+  // Highlight active sidebar item
+  document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('chat-item-' + sessionId)?.classList.add('active');
+
+  // Build chat UI
+  const area = document.getElementById('chatMainArea');
+  area.innerHTML = `
+    <div class="chat-topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:38px;height:38px;background:linear-gradient(135deg,var(--gold-l),var(--gold-d));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;flex-shrink:0">${name.charAt(0).toUpperCase()}</div>
+        <div>
+          <div style="font-weight:700;font-size:15px">${name}</div>
+          <div style="font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:4px"><span id="adminChatStatus" style="width:7px;height:7px;background:#4ade80;border-radius:50%;display:inline-block"></span>${phone}</div>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <a href="https://wa.me/91${phone}" target="_blank" class="btn btn-green btn-sm"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+        <button class="btn btn-danger btn-sm" onclick="clearChat('${sessionId}')"><i class="fas fa-trash"></i> Clear</button>
+      </div>
+    </div>
+    <div class="chat-messages-area" id="adminChatMessages">
+      <div style="text-align:center;color:var(--text-light);padding:20px;font-size:13px">Loading...</div>
+    </div>
+    <div class="chat-reply-row">
+      <input type="text" id="adminReplyInput" placeholder="Type reply and press Enter..."
+        onkeypress="if(event.key==='Enter')sendAdminReply('${sessionId}')">
+      <button class="btn btn-gold btn-sm" onclick="sendAdminReply('${sessionId}')">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>`;
+
+  // Load full history
+  try {
+    const resp = await fetch('/admin/chat/' + sessionId + '/messages');
+    const data = await resp.json();
+    renderMsgs(data.messages, true);
+    if (data.messages.length > 0) {
+      lastAdminMsgTime = data.messages[data.messages.length - 1].createdAt;
+    }
+  } catch(e) {
+    console.error('Failed to load chat:', e);
+  }
+
+  // Start polling for new messages every 3 seconds
+  startAdminChatPoll(sessionId);
+  document.getElementById('adminReplyInput')?.focus();
+}
+
+function renderMsgs(messages, replace = false) {
+  const c = document.getElementById('adminChatMessages');
+  if (!c) return;
+
+  if (replace) {
+    c.innerHTML = '';
+    if (!messages.length) {
+      c.innerHTML = '<div style="text-align:center;color:var(--text-light);padding:30px;font-size:13px"><i class="fas fa-comment-slash" style="display:block;font-size:28px;color:#ddd;margin-bottom:8px"></i>No messages yet</div>';
+      return;
+    }
+  }
+
+  messages.forEach(m => {
+    // Skip if already rendered (check by _id)
+    if (document.getElementById('msg-' + m._id)) return;
+    const d = document.createElement('div');
+    d.id = 'msg-' + m._id;
+    d.className = 'chat-bubble ' + (m.fromCustomer ? 'customer' : 'admin');
+    const t = new Date(m.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    const sender = m.fromCustomer ? `<strong>${m.customerName}</strong>` : '👨‍💼 <strong>Admin</strong>';
+    d.innerHTML = `<div class="bubble-text">${escapeHtml(m.message)}</div><div class="bubble-time">${sender} · ${t}</div>`;
+    c.appendChild(d);
+    if (lastAdminMsgTime === null || new Date(m.createdAt) > new Date(lastAdminMsgTime)) {
+      lastAdminMsgTime = m.createdAt;
+    }
+  });
+  c.scrollTop = c.scrollHeight;
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function pollAdminChat() {
+  if (!activeChatSession) return;
+  try {
+    const since = lastAdminMsgTime || new Date(0).toISOString();
+    const resp = await fetch(`/admin/chat/${activeChatSession}/updates?since=${encodeURIComponent(since)}`);
+    const data = await resp.json();
+    if (data.messages && data.messages.length > 0) {
+      renderMsgs(data.messages, false);
+      // Flash status dot
+      const dot = document.getElementById('adminChatStatus');
+      if (dot) { dot.style.background = '#f59e0b'; setTimeout(function(){ dot.style.background = '#4ade80'; }, 600); }
+      // Update sidebar unread count
+      const item = document.getElementById('chat-item-' + activeChatSession);
+      if (item) item.querySelector('.unread-dot') && item.querySelector('.unread-dot').remove();
+    }
+  } catch(e) {}
+}
+
+function startAdminChatPoll(sessionId) {
+  stopAdminChatPoll();
+  adminChatPollInterval = setInterval(() => {
+    if (activeChatSession === sessionId) pollAdminChat();
+    else stopAdminChatPoll();
+  }, 2500);
+}
+
+// ── Global poll: refreshes sidebar session list for new chats + badge counts ──
+var _globalChatPoll = null;
+var _globalChatTs   = new Date().toISOString();
+
+async function _pollGlobalChat() {
+  try {
+    const r = await fetch('/api/admin/chat-sessions');
+    const d = await r.json();
+    if (!d.sessions) return;
+    const list = document.getElementById('chatSessionList');
+    if (!list) return;
+
+    // Total unread for nav badge
+    const totalUnread = d.sessions.reduce((s,x) => s + (x.totalUnread||0), 0);
+    const navBadge = document.getElementById('chatNavBadge');
+    if (navBadge) {
+      if (totalUnread > 0) { navBadge.textContent = totalUnread > 9 ? '9+' : totalUnread; navBadge.style.display='inline'; }
+      else navBadge.style.display='none';
+    }
+
+    // Rebuild session list (preserves active)
+    if (d.sessions.length === 0) {
+      list.innerHTML = '<div class="empty-state" style="padding:30px"><i class="fas fa-comment-slash"></i><p>No chats yet</p></div>';
+      return;
+    }
+    // Only re-render if sessions changed (count or unread)
+    const newHash = d.sessions.map(s=>s._id+':'+s.totalUnread+':'+s.lastTime).join('|');
+    if (list.dataset.hash === newHash) return; // nothing changed
+    list.dataset.hash = newHash;
+
+    list.innerHTML = d.sessions.map(s => {
+      const isActive = s._id === activeChatSession ? 'active' : '';
+      const t = new Date(s.lastTime).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+      const badge = s.totalUnread > 0
+        ? `<div style="min-width:20px;height:20px;background:#ef4444;color:#fff;border-radius:20px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 5px;flex-shrink:0">${s.totalUnread > 9 ? '9+' : s.totalUnread}</div>` : '';
+      return `<div class="chat-list-item ${isActive}" onclick="loadAdminChat('${s._id}','${escapeHtml(s.customerName)}','${s.customerPhone}')" id="chat-item-${s._id}">
+        <div class="chat-avatar">${s.customerName.charAt(0).toUpperCase()}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="chat-list-name">${escapeHtml(s.customerName)}</span>
+            <span class="chat-list-time">${t}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text-light);margin-top:1px">${s.customerPhone}</div>
+          <div class="chat-list-preview">${escapeHtml(s.lastMessage||'')}</div>
+        </div>
+        ${badge}
+      </div>`;
+    }).join('');
+  } catch(e) {}
+}
+
+function startGlobalChatPoll() {
+  _pollGlobalChat(); // immediate first run
+  if (!_globalChatPoll) _globalChatPoll = setInterval(_pollGlobalChat, 6000);
+}
+// Start immediately on page load
+startGlobalChatPoll();
+
+function stopAdminChatPoll() {
+  if (adminChatPollInterval) {
+    clearInterval(adminChatPollInterval);
+    adminChatPollInterval = null;
+  }
+}
+
+async function sendAdminReply(sessionId) {
+  const input = document.getElementById('adminReplyInput');
+  const msg = input?.value?.trim();
+  if (!msg) return;
+  input.value = '';
+  input.disabled = true;
+
+  try {
+    await fetch('/admin/chat/' + sessionId + '/reply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg })
+    });
+    // Immediately fetch updated messages
+    const resp = await fetch('/admin/chat/' + sessionId + '/messages');
+    const data = await resp.json();
+    renderMsgs(data.messages, true);
+    if (data.messages.length > 0) {
+      lastAdminMsgTime = data.messages[data.messages.length - 1].createdAt;
+    }
+  } catch(e) {
+    alert('Failed to send reply');
+  } finally {
+    input.disabled = false;
+    input.focus();
+  }
+}
+
+async function clearChat(sessionId) {
+  if (!confirm('Clear ALL messages in this chat? This cannot be undone.')) return;
+  try {
+    await fetch('/admin/chat/' + sessionId, { method: 'DELETE' });
+    stopAdminChatPoll();
+    activeChatSession = null;
+    lastAdminMsgTime = null;
+    document.getElementById('chatMainArea').innerHTML =
+      '<div class="chat-placeholder"><i class="fas fa-check-circle" style="color:var(--green);font-size:32px"></i><p style="margin-top:8px">Chat history cleared</p></div>';
+    const item = document.getElementById('chat-item-' + sessionId);
+    if (item) item.remove();
+    // Update unread badge
+    const badge = document.querySelector('.nav-badge');
+    if (badge) badge.remove();
+  } catch(e) { alert('Failed to clear chat'); }
+}
+
+if (window.innerWidth < 900) document.getElementById('menu-btn').style.display = 'block';
+
+function toggleSidebar() {
+  var s = document.getElementById('sidebar');
+  var o = document.getElementById('sidebarOverlay');
+  var isOpen = s.classList.toggle('open');
+  o.style.display = isOpen ? 'block' : 'none';
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').style.display = 'none';
+}
+// Close sidebar when any nav link is clicked on mobile
+document.querySelectorAll('.sidebar .nav-item').forEach(function(el) {
+  el.addEventListener('click', function() {
+    if (window.innerWidth < 900) closeSidebar();
+  });
+});
+</script>
+</body>
+</html>
