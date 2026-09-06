@@ -108,4 +108,13 @@ const ChatMessage = mongoose.model('ChatMessage', chatMessageSchema);
 const Testimonial = mongoose.model('Testimonial', testimonialSchema);
 const CarPartner = mongoose.model('CarPartner', carPartnerSchema);
 
-module.exports = { Car, Booking, PushSubscription, ChatMessage, Testimonial, CarPartner };
+const otpSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  name:  String,
+  otp:   { type: String, required: true },
+  expiry:{ type: Date, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+const OtpRecord = mongoose.model('OtpRecord', otpSchema);
+
+module.exports = { Car, Booking, PushSubscription, ChatMessage, Testimonial, CarPartner, OtpRecord };

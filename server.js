@@ -6,7 +6,7 @@ const cors = require('cors');
 const path = require('path');
 const webpush = require('web-push');
 const connectDB = require('./config/db');
-const { Car, Booking, PushSubscription, ChatMessage, Testimonial, CarPartner } = require('./models');
+const { Car, Booking, PushSubscription, ChatMessage, Testimonial, CarPartner, OtpRecord } = require('./models');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const crypto = require('crypto');
@@ -61,40 +61,38 @@ const sendPushTo = async (subs, title, body, data = {}) => {
 const pushAdmin    = async (t, b, d = {}) => sendPushTo(await PushSubscription.find({ role: 'admin' }), t, b, d);
 const pushCustomer = async (phone, t, b, d = {}) => { if (!phone) return; sendPushTo(await PushSubscription.find({ role: 'customer', phone: phone.trim() }), t, b, d); };
 
-// ── Firebase Admin SDK ───────────────────────────────────────
+// ── Firebase Admin — ONLY for Google Sign-In token verification (free) ──
 const admin = require('firebase-admin');
 let firebaseReady = false;
 try {
-  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT
-    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-    : null;
-  if (serviceAccount) {
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-      projectId: serviceAccount.project_id
-    });
+  const sa = process.env.FIREBASE_SERVICE_ACCOUNT ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT) : null;
+  if (sa) {
+    admin.initializeApp({ credential: admin.credential.cert(sa) });
     firebaseReady = true;
-    console.log('✅ Firebase Admin ready');
+    console.log('✅ Firebase Admin ready (Google Sign-In)');
   } else {
-    console.log('⚠ FIREBASE_SERVICE_ACCOUNT not set — email/auth disabled');
+    console.log('⚠ FIREBASE_SERVICE_ACCOUNT not set — Google Sign-In disabled (email OTP still works)');
   }
 } catch(e) { console.log('❌ Firebase init error:', e.message); }
 
-// Send email via Firebase Trigger Email Extension (stores in Firestore mail collection)
+// ── Nodemailer — free Gmail SMTP for all emails ───────────────
+const nodemailer = require('nodemailer');
 const sendEmail = async (to, subject, html) => {
-  if (!firebaseReady) {
-    console.log('⚠ Email skipped (Firebase not ready):', subject);
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.log('⚠ EMAIL_USER/EMAIL_PASS not set — email skipped:', subject);
     return;
   }
-  // Store email in Firestore "mail" collection — Firebase Trigger Email Extension picks it up
   try {
-    await admin.firestore().collection('mail').add({
-      to,
-      message: { subject, html },
-      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    const t = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
     });
-    console.log('✅ Email queued via Firebase:', subject, '→', to);
-  } catch(e) { console.log('❌ Firebase email error:', e.message); }
+    const info = await t.sendMail({
+      from: `"Brajwasi Tour & Travels" <${process.env.EMAIL_USER}>`,
+      to, subject, html
+    });
+    console.log('✅ Email sent:', info.messageId);
+  } catch(e) { console.log('❌ Email error:', e.message); }
 };
 
 const adminAuth = (req, res, next) => req.session.admin ? next() : res.redirect('/admin/login');
@@ -130,16 +128,15 @@ app.get('/robots.txt', (_, res) => {
 //  CUSTOMER AUTH (OTP via email)
 // ════════════════════════════════════════════════════════════
 
-// ── Firebase Email OTP Auth ───────────────────────────────────
-// Send OTP — generates OTP, stores in session temporarily, sends via Firebase email
+// ── OTP Auth (DB-backed, Gmail SMTP — 100% free) ─────────────
 app.post('/api/auth/send-otp', async (req, res) => {
   const { email, name } = req.body;
   if (!email) return res.status(400).json({ error: 'Email required' });
   const otp = genOtp();
-  const expiry = Date.now() + 10 * 60 * 1000; // 10 min
-  // Store pending OTP in session (no DB needed)
-  req.session.pendingOtp = { email, otp, expiry, name: name || email.split('@')[0] };
-  // Send via Firebase Trigger Email Extension
+  const expiry = new Date(Date.now() + 10 * 60 * 1000);
+  // Upsert OTP in MongoDB — survives server restarts unlike session
+  await OtpRecord.findOneAndUpdate({ email }, { email, otp, expiry, name: name||email.split('@')[0] }, { upsert: true });
+  // Send via nodemailer (free Gmail SMTP)
   await sendEmail(email, `Your Brajwasi Travels Login OTP: ${otp}`,
     `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#fff;border-radius:12px">
       <div style="text-align:center;margin-bottom:20px">
@@ -158,19 +155,16 @@ app.post('/api/auth/send-otp', async (req, res) => {
   res.json({ success: true });
 });
 
-// Verify OTP — checks session-stored OTP
 app.post('/api/auth/verify-otp', async (req, res) => {
   const { email, otp } = req.body;
-  const pending = req.session.pendingOtp;
-  if (!pending || pending.email !== email)
-    return res.status(400).json({ error: 'No OTP request found. Please request a new OTP.' });
-  if (pending.otp !== otp)
-    return res.status(400).json({ error: 'Invalid OTP. Please check your email.' });
-  if (Date.now() > pending.expiry)
-    return res.status(400).json({ error: 'OTP expired. Please request a new one.' });
-  delete req.session.pendingOtp;
-  req.session.customer = { email, name: pending.name || email.split('@')[0] };
-  res.json({ success: true, name: req.session.customer.name, email });
+  const record = await OtpRecord.findOne({ email });
+  if (!record) return res.status(400).json({ error: 'No OTP found. Please request a new one.' });
+  if (record.otp !== otp) return res.status(400).json({ error: 'Invalid OTP. Check your email.' });
+  if (new Date() > record.expiry) return res.status(400).json({ error: 'OTP expired. Request a new one.' });
+  await OtpRecord.deleteOne({ email });
+  const name = record.name || email.split('@')[0];
+  req.session.customer = { email, name };
+  res.json({ success: true, name, email });
 });
 
 // Firebase ID token login (Google Sign-In from client)
@@ -439,7 +433,7 @@ app.post('/api/driver/reset-secret/send-otp', async (req, res) => {
   const partner = await CarPartner.findOne({ email });
   if (!partner) return res.status(404).json({ error: 'No partner found with this email' });
   const otp = genOtp();
-  req.session.driverResetOtp = { email, otp, expiry: Date.now() + 10 * 60000 };
+  await CarPartner.findByIdAndUpdate(partner._id, { resetOtp: otp, resetOtpExpiry: new Date(Date.now()+10*60000) });
   await sendEmail(email, `Brajwasi Driver Secret Reset OTP: ${otp}`,
     `<div style="font-family:Arial,sans-serif;max-width:420px;padding:24px;background:#fff;border-radius:12px">
       <h2 style="color:#B8780A">🔐 Reset Your Driver Secret</h2>
@@ -453,14 +447,10 @@ app.post('/api/driver/reset-secret/send-otp', async (req, res) => {
 app.post('/api/driver/reset-secret/verify', async (req, res) => {
   const { email, otp, newSecret } = req.body;
   if (!newSecret || newSecret.length < 6) return res.status(400).json({ error: 'Secret must be at least 6 characters' });
-  const pending = req.session.driverResetOtp;
-  if (!pending || pending.email !== email || pending.otp !== otp)
-    return res.status(400).json({ error: 'Invalid OTP' });
-  if (Date.now() > pending.expiry) return res.status(400).json({ error: 'OTP expired. Request a new one.' });
-  delete req.session.driverResetOtp;
   const partner = await CarPartner.findOne({ email });
-  if (!partner) return res.status(404).json({ error: 'Partner not found' });
-  await CarPartner.findByIdAndUpdate(partner._id, { driverSecret: newSecret });
+  if (!partner || partner.resetOtp !== otp) return res.status(400).json({ error: 'Invalid OTP' });
+  if (new Date() > partner.resetOtpExpiry) return res.status(400).json({ error: 'OTP expired. Request a new one.' });
+  await CarPartner.findByIdAndUpdate(partner._id, { driverSecret: newSecret, resetOtp: null, resetOtpExpiry: null });
   res.json({ success: true });
 });
 
