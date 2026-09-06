@@ -22,3 +22,7 @@ services:
         value: OhSUztjngIPuuSwikR7_9O0AVh4JhZfLNWVMH_g3F6E
       - key: VAPID_EMAIL
         value: mailto:brajwasitravels.1980@gmail.com
+      - key: BREVO_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        value: brajwasitravels.1980@gmail.com

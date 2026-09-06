@@ -1,65 +1,53 @@
-# Firebase + Email Setup — 100% Free
+# Firebase Auth Setup — 100% Free, No Gmail/SMTP
 
-## What uses Firebase (free forever)
-- **Google Sign-In only** — Firebase Authentication free tier: unlimited users
+## Customer login now uses ONLY Firebase (v11 change)
+- **Google Sign-In** — Firebase Authentication free tier: unlimited users
+- **Email Link ("magic link") Sign-In** — replaces the old Gmail-SMTP 6-digit OTP. Firebase sends the email itself; nothing to configure, no Gmail App Password needed.
+- Admin/partner notification emails (booking assigned, partner approved, etc.) go through **Brevo's HTTPS email API** — NOT SMTP. This matters because Render's free web-service tier permanently blocks outbound SMTP ports (25/465/587); Gmail SMTP via nodemailer can never connect from a free Render instance, which is what caused the "rolling and rolling" hangs. Brevo's API is a normal HTTPS call (port 443), which Render never blocks, and it's free for 300 emails/day. These calls are also **fire-and-forget** — if Brevo is down or unset, the admin action still completes instantly.
 
-## What uses Gmail SMTP (free)
-- All OTP emails, booking confirmations, partner emails — via nodemailer + Gmail
+## Step 0: Brevo setup (for admin/partner notification emails — optional but recommended)
+1. Sign up free at https://www.brevo.com (no credit card)
+2. Senders, Domains & Dedicated IPs → **Senders** → add & verify `brajwasitravels.1980@gmail.com` (or your business address) — Brevo emails you a confirmation link
+3. Settings (top right) → **SMTP & API** → API Keys → **Generate a new API key** → copy it
+4. Set `BREVO_API_KEY` on Render to that key, and `EMAIL_FROM` to the verified sender address
 
----
 
-## Step 1: Create Firebase Project (for Google Sign-In)
-1. Go to https://console.firebase.google.com
-2. Click "Add project" → name: `brajwasi-travels` → Create
-3. Authentication → Get started → Sign-in method → Enable **Google**
-4. Authorized domains → Add: `brajwasi-travels.onrender.com`
+## Step 1: Firebase Console setup
+1. https://console.firebase.google.com → your project → **Authentication → Sign-in method**
+2. Enable **Google**
+3. Enable **Email/Password** provider, then toggle on **Email link (passwordless sign-in)** inside it
+4. **Authentication → Settings → Authorized domains** → add every domain you serve the site from (e.g. `brajwasi-travels.onrender.com`, your custom domain, and `localhost` for local dev)
 
-## Step 2: Get Web App Config (paste into index.ejs)
-1. Firebase Console → Project Settings (gear) → "Your apps" → Add app → Web (</>)
-2. Register app name `brajwasi-web` → Copy the firebaseConfig object
-3. In `views/index.ejs` replace these lines (search for `YOUR_FIREBASE`):
-```js
-apiKey:     "AIzaSy..."
-authDomain: "brajwasi-travels.firebaseapp.com"
-projectId:  "brajwasi-travels"
-```
-Same in `views/payment.ejs`
+## Step 2: Web App Config (views/index.ejs and views/payment.ejs)
+Firebase Console → Project Settings (gear) → "Your apps" → Web app → copy the config, and replace the `YOUR_FIREBASE_API_KEY` / `YOUR_PROJECT...` placeholders in both files (search for `YOUR_FIREBASE`).
 
-## Step 3: Get Service Account Key (for Google Sign-In token verification on server)
-1. Firebase Console → Project Settings → Service accounts tab
-2. Click "Generate new private key" → Download JSON
-3. Open JSON file → copy ALL content → go to Render dashboard
+## Step 3: Service Account (server-side Google/Email-Link token verification — same for both)
+1. Firebase Console → Project Settings → Service accounts → Generate new private key
+2. Minify the downloaded JSON to one line → set as `FIREBASE_SERVICE_ACCOUNT` on Render
 
-## Step 4: Set Render Environment Variables
+## Step 4: Render Environment Variables
 ```
 MONGODB_URI              = mongodb+srv://...
-EMAIL_USER               = brajwasitravels.1980@gmail.com
-EMAIL_PASS               = xxxx xxxx xxxx xxxx   ← Gmail App Password (NOT your gmail password)
-EMAIL_TO                 = brajwasitravels.1980@gmail.com
-UPI_ID                   = yourname@upi
 SESSION_SECRET           = any_random_long_string
 ADMIN_USERNAME           = admin
 ADMIN_PASSWORD           = yourpassword
-FIREBASE_SERVICE_ACCOUNT = {"type":"service_account","project_id":"brajwasi-travels",...}
-                           (paste entire JSON minified to ONE line — use jsonformatter.org/minify)
+FIREBASE_SERVICE_ACCOUNT = {"type":"service_account","project_id":"...","...":"..."}
 VAPID_PUBLIC_KEY         = (from web-push keygen)
 VAPID_PRIVATE_KEY        = (from web-push keygen)
 VAPID_EMAIL              = mailto:brajwasitravels.1980@gmail.com
 DRIVER_SECRET            = any_secret_word
+UPI_ID                   = yourname@upi
+
+# OPTIONAL — only needed for admin/partner notification emails via Brevo (see Step 0 above).
+# Leave unset and the app works perfectly; those emails are just skipped.
+BREVO_API_KEY            = xkeysib-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+EMAIL_FROM               = brajwasitravels.1980@gmail.com   ← must be a Brevo-verified sender
+EMAIL_TO                 = brajwasitravels.1980@gmail.com   ← where new-booking/new-partner alerts go
 ```
 
-## How to get Gmail App Password
-1. Google Account (brajwasitravels.1980@gmail.com) → Security
-2. Enable 2-Step Verification (if not already)
-3. Security → App passwords → Select app: Mail → Select device: Other → "Brajwasi Server"
-4. Copy the 16-character password → paste as EMAIL_PASS in Render
+## Login flow for customers (v11)
+- **Google**: Click "Continue with Google" → Firebase popup → instant login.
+- **Email Link**: Enter email → Firebase emails a sign-in link directly (no server/Gmail involved) → customer opens it on the same device/browser → auto-logged in, no code to type.
 
 ## Cost: ₹0/month
-- Firebase Authentication: FREE (unlimited)
-- Gmail SMTP via nodemailer: FREE (500 emails/day)
-- MongoDB Atlas free tier: FREE (512MB)
-- Render free tier: FREE
-
-## Login flow for customers:
-Option A (Google): Click "Continue with Google" → Firebase popup → instant login
-Option B (Email OTP): Enter email → receive 6-digit OTP via Gmail → verify → logged in
+Firebase Authentication (Google + Email Link): FREE unlimited · MongoDB Atlas free tier · Render free tier.

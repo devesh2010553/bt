@@ -16,9 +16,9 @@
   import { getAuth, signInWithEmailLink, sendSignInLinkToEmail, isSignInWithEmailLink, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
   // Firebase config — set these values from your Firebase Console
   const firebaseConfig = {
-    apiKey:            window._fbApiKey     || "AIzaSyDaAyjHaLc-EjhbJRE5GUqkDnF8BszJ7MQ",
-    authDomain:        window._fbAuthDomain || "brajwasi-travels.firebaseapp.com",
-    projectId:         window._fbProjectId  || "brajwasi-travels"
+    apiKey:            window._fbApiKey     || "YOUR_FIREBASE_API_KEY",
+    authDomain:        window._fbAuthDomain || "YOUR_PROJECT.firebaseapp.com",
+    projectId:         window._fbProjectId  || "YOUR_PROJECT_ID"
   };
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -29,6 +29,10 @@
   window._fbSignInPopup    = (p) => signInWithPopup(auth, p);
   window._fbOnAuthState    = (cb) => onAuthStateChanged(auth, cb);
   window._fbGetIdToken     = () => auth.currentUser ? auth.currentUser.getIdToken() : null;
+  // Email-link ("magic link") sign-in — sent and verified entirely by Firebase, zero SMTP/OTP needed
+  window._fbSendSignInLink = (email, url) => sendSignInLinkToEmail(auth, email, { url, handleCodeInApp: true });
+  window._fbIsSignInLink   = (url) => isSignInWithEmailLink(auth, url);
+  window._fbSignInWithLink = (email, url) => signInWithEmailLink(auth, email, url);
 </script>
 <meta name="google-site-verification" content="25vVIruxvnPxmS12tcZykCuX5MjQ3eVOnWd74_PNADg">
 <link rel="manifest" href="/manifest.json">
@@ -442,18 +446,20 @@
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.5 30.3 0 24 0 14.7 0 6.8 5.4 2.7 13.3l7.8 6.1C12.5 13 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17z"/><path fill="#FBBC05" d="M10.5 28.6A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.1.7-4.6l-7.8-6.1A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.6 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.6-2.1 15.5-5.6l-7.5-5.8c-2.1 1.4-4.8 2.3-8 2.3-6.2 0-11.5-4.2-13.4-9.9l-7.9 6.1C6.8 42.6 14.7 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
       Continue with Google
     </button>
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="flex:1;height:1px;background:#E8DDD0"></div><span style="font-size:12px;color:#A0917E">or use email OTP</span><div style="flex:1;height:1px;background:#E8DDD0"></div></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="flex:1;height:1px;background:#E8DDD0"></div><span style="font-size:12px;color:#A0917E">or use a login link</span><div style="flex:1;height:1px;background:#E8DDD0"></div></div>
     <div id="otpAlert"></div>
     <div id="otpStep1">
       <div style="margin-bottom:12px"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Your Name</label><input type="text" id="otpNameIn" placeholder="Full name (optional)" style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
       <div style="margin-bottom:16px"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Email Address *</label><input type="email" id="otpEmailIn" placeholder="you@example.com" required style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:10px 13px;border-radius:10px;font-size:13px;font-family:inherit;outline:none"></div>
-      <button id="sendOtpBtn" style="width:100%;padding:13px;background:linear-gradient(135deg,#D4920E,#8A5A06);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;margin-bottom:10px"><i class="fas fa-paper-plane"></i> Send OTP to Email</button>
-      <p style="text-align:center;font-size:12px;color:#A0917E">A 6-digit code will be sent to your email. No password needed.</p>
+      <button id="sendOtpBtn" style="width:100%;padding:13px;background:linear-gradient(135deg,#D4920E,#8A5A06);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;margin-bottom:10px"><i class="fas fa-paper-plane"></i> Send Login Link</button>
+      <p style="text-align:center;font-size:12px;color:#A0917E">We'll email you a secure sign-in link. No password, no OTP to type.</p>
     </div>
     <div id="otpStep2" style="display:none">
-      <div style="background:#FFF8EC;border:1px solid rgba(184,120,10,.2);border-radius:10px;padding:14px;margin-bottom:14px;text-align:center"><p style="font-size:13px;color:#7A6A55">OTP sent to <strong id="otpEmailDisplay"></strong></p></div>
-      <div style="margin-bottom:14px"><label style="display:block;font-size:11px;color:#7A6A55;margin-bottom:5px;font-weight:700;text-transform:uppercase">Enter OTP *</label><input type="text" id="otpCodeIn" placeholder="e.g. 482916" maxlength="6" style="width:100%;background:#F8F5F0;border:1px solid #E8DDD0;color:#1A1208;padding:12px;border-radius:10px;font-size:24px;font-weight:800;letter-spacing:10px;text-align:center;font-family:inherit;outline:none"></div>
-      <button id="verifyOtpBtn" style="width:100%;padding:13px;background:linear-gradient(135deg,#D4920E,#8A5A06);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;margin-bottom:10px"><i class="fas fa-check"></i> Verify & Login</button>
+      <div style="background:#FFF8EC;border:1px solid rgba(184,120,10,.2);border-radius:10px;padding:16px;margin-bottom:14px;text-align:center">
+        <i class="fas fa-envelope-circle-check" style="font-size:26px;color:#B8780A;margin-bottom:8px;display:block"></i>
+        <p style="font-size:13px;color:#7A6A55;margin:0">Login link sent to <strong id="otpEmailDisplay"></strong>. Open it on this device to finish signing in.</p>
+      </div>
+      <button id="resendOtpBtn" style="width:100%;padding:11px;background:none;border:1px solid #E8DDD0;border-radius:10px;color:#8A5A06;font-weight:600;cursor:pointer;font-size:13px;font-family:inherit;margin-bottom:8px">Resend link</button>
       <button onclick="document.getElementById('otpStep1').style.display='block';document.getElementById('otpStep2').style.display='none'" style="width:100%;padding:10px;background:none;border:1px solid #E8DDD0;border-radius:10px;color:#7A6A55;cursor:pointer;font-size:13px;font-family:inherit">← Use different email</button>
     </div>
   </div>
@@ -676,41 +682,60 @@ function signInWithGoogle(){
     btn.innerHTML='<svg width="18" height="18" viewBox="0 0 48 48">...</svg> Continue with Google';btn.disabled=false;
   });
 }
+// ── Firebase Email-Link login (fully replaces the old Gmail-SMTP OTP) ──
+function _sendLoginLink(email){
+  var al=document.getElementById('otpAlert');
+  if(!window._fbSendSignInLink){al.innerHTML='<div style="color:#C0392B;font-size:13px;margin-bottom:8px">Login is temporarily unavailable. Please try again shortly.</div>';return Promise.reject();}
+  var name=document.getElementById('otpNameIn').value.trim();
+  window.localStorage.setItem('bt_login_email',email);
+  window.localStorage.setItem('bt_login_name',name);
+  return window._fbSendSignInLink(email, window.location.href.split('#')[0]);
+}
 document.getElementById('sendOtpBtn').addEventListener('click',function(){
   var email=document.getElementById('otpEmailIn').value.trim();
   var al=document.getElementById('otpAlert');
   if(!email){al.innerHTML='<div style="color:#C0392B;font-size:13px;margin-bottom:8px">Please enter your email</div>';return;}
   var btn=this;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Sending...';btn.disabled=true;
-  fetch('/api/auth/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,name:''})})
-    .then(function(r){return r.json();}).then(function(d){
-      if(d.success){
-        document.getElementById('otpStep1').style.display='none';
-        document.getElementById('otpStep2').style.display='block';
-        document.getElementById('otpEmailDisplay').textContent=email;
-        al.innerHTML='';
-        setTimeout(function(){var c=document.getElementById('otpCodeIn');if(c)c.focus();},100);
-      }else{al.innerHTML='<div style="color:#C0392B;font-size:13px;margin-bottom:8px">'+(d.error||'Failed')+'</div>';}
-      btn.innerHTML='<i class="fas fa-paper-plane"></i> Send OTP to Email';btn.disabled=false;
-    }).catch(function(){al.innerHTML='<div style="color:#C0392B;font-size:13px">Network error</div>';btn.innerHTML='<i class="fas fa-paper-plane"></i> Send OTP to Email';btn.disabled=false;});
+  _sendLoginLink(email).then(function(){
+    document.getElementById('otpStep1').style.display='none';
+    document.getElementById('otpStep2').style.display='block';
+    document.getElementById('otpEmailDisplay').textContent=email;
+    al.innerHTML='';
+  }).catch(function(e){
+    if(e)al.innerHTML='<div style="color:#C0392B;font-size:13px;margin-bottom:8px">'+(e.message||'Could not send link. Try again.')+'</div>';
+  }).finally(function(){
+    btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Login Link';btn.disabled=false;
+  });
 });
 document.getElementById('otpEmailIn').addEventListener('keypress',function(e){if(e.key==='Enter')document.getElementById('sendOtpBtn').click();});
-document.getElementById('verifyOtpBtn').addEventListener('click',function(){
-  var email=document.getElementById('otpEmailIn').value.trim();
-  var otp=document.getElementById('otpCodeIn').value.trim();
-  var al=document.getElementById('otpAlert');
-  if(!otp){al.innerHTML='<div style="color:#C0392B;font-size:13px">Enter the OTP</div>';return;}
-  var btn=this;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Verifying...';btn.disabled=true;
-  fetch('/api/auth/verify-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,otp:otp})})
-    .then(function(r){return r.json();}).then(function(d){
-      if(d.success){
-        _session=d;hideModal('loginModal');_renderLoginBar(d);
-        var ef=document.getElementById('bkEmail');if(ef)ef.value=d.email;
-        _toast('Logged in as '+d.name+'! Now complete your booking.','success');
-      }else{al.innerHTML='<div style="color:#C0392B;font-size:13px;margin-bottom:8px">'+(d.error||'Invalid OTP')+'</div>';}
-      btn.innerHTML='<i class="fas fa-check"></i> Verify & Login';btn.disabled=false;
-    }).catch(function(){al.innerHTML='<div style="color:#C0392B;font-size:13px">Network error</div>';btn.innerHTML='<i class="fas fa-check"></i> Verify & Login';btn.disabled=false;});
+document.getElementById('resendOtpBtn').addEventListener('click',function(){
+  var email=document.getElementById('otpEmailDisplay').textContent;
+  var btn=this;btn.textContent='Sending...';btn.disabled=true;
+  _sendLoginLink(email).then(function(){_toast('Login link re-sent!','success');}).catch(function(){_toast('Could not resend. Try again.','error');})
+    .finally(function(){btn.textContent='Resend link';btn.disabled=false;});
 });
-document.getElementById('otpCodeIn').addEventListener('keypress',function(e){if(e.key==='Enter')document.getElementById('verifyOtpBtn').click();});
+// On page load: if this page WAS opened from the emailed sign-in link, complete the login automatically
+(function _completeEmailLinkLogin(){
+  if(!window._fbIsSignInLink || !window._fbIsSignInLink(window.location.href)) return;
+  var email=window.localStorage.getItem('bt_login_email');
+  if(!email){ email = window.prompt('Confirm your email to finish signing in:'); }
+  if(!email) return;
+  window._fbSignInWithLink(email, window.location.href).then(function(result){
+    return result.user.getIdToken();
+  }).then(function(token){
+    return fetch('/api/auth/firebase-login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({idToken:token})});
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.success){
+      _session=d;_renderLoginBar(d);
+      var ef=document.getElementById('bkEmail');if(ef)ef.value=d.email;
+      _toast('Logged in as '+d.name+'!','success');
+    }
+    window.localStorage.removeItem('bt_login_email');
+    window.localStorage.removeItem('bt_login_name');
+    // Clean the sign-in params out of the URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }).catch(function(e){ _toast('Login link error: '+(e.message||'invalid or expired link'),'error'); });
+})();
 
 // ── FEEDBACK / TESTIMONIALS ───────────────────────────────
 document.getElementById('openFeedbackBtn').addEventListener('click',function(){showModal('feedbackModal');});

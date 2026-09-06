@@ -1,12 +1,13 @@
 require('dotenv').config();
 const express = require('express');
+require('express-async-errors'); // makes every async route auto-forward errors instead of hanging forever
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
 const webpush = require('web-push');
 const connectDB = require('./config/db');
-const { Car, Booking, PushSubscription, ChatMessage, Testimonial, CarPartner, OtpRecord } = require('./models');
+const { Car, Booking, PushSubscription, ChatMessage, Testimonial, CarPartner } = require('./models');
 const { v4: uuidv4 } = require('uuid');
 const multer = require('multer');
 const crypto = require('crypto');
@@ -71,28 +72,39 @@ try {
     firebaseReady = true;
     console.log('✅ Firebase Admin ready (Google Sign-In)');
   } else {
-    console.log('⚠ FIREBASE_SERVICE_ACCOUNT not set — Google Sign-In disabled (email OTP still works)');
+    console.log('⚠ FIREBASE_SERVICE_ACCOUNT not set — customer login (Google + Email Link) disabled');
   }
 } catch(e) { console.log('❌ Firebase init error:', e.message); }
 
-// ── Nodemailer — free Gmail SMTP for all emails ───────────────
-const nodemailer = require('nodemailer');
+// ── Email — OPTIONAL, best-effort, via Brevo's HTTPS API (NOT SMTP) for admin/partner
+// notification emails only. Customer login (Google + Email Link) is 100% Firebase — this
+// has zero involvement in login. Render's free tier blocks outbound SMTP ports (25/465/587)
+// entirely, which is why nodemailer/Gmail SMTP could never work here and hung every call
+// ("rolling and rolling"). Brevo's API is plain HTTPS (port 443) — never blocked, works free.
+// Every call site fires this WITHOUT await, so even a Brevo outage can't freeze a response.
 const sendEmail = async (to, subject, html) => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.log('⚠ EMAIL_USER/EMAIL_PASS not set — email skipped:', subject);
+  if (!process.env.BREVO_API_KEY) {
+    console.log('⚠ BREVO_API_KEY not set — email skipped:', subject);
     return;
   }
   try {
-    const t = nodemailer.createTransport({
-      service: 'gmail',
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'Brajwasi Tour & Travels', email: process.env.EMAIL_FROM },
+        to: [{ email: to }],
+        subject, htmlContent: html
+      }),
+      signal: controller.signal
     });
-    const info = await t.sendMail({
-      from: `"Brajwasi Tour & Travels" <${process.env.EMAIL_USER}>`,
-      to, subject, html
-    });
-    console.log('✅ Email sent:', info.messageId);
-  } catch(e) { console.log('❌ Email error:', e.message); }
+    clearTimeout(timeout);
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.message || `Brevo API error ${r.status}`);
+    console.log('✅ Email sent via Brevo:', data.messageId || '');
+  } catch(e) { console.log('❌ Email error (non-blocking, ignored):', e.message); }
 };
 
 const adminAuth = (req, res, next) => req.session.admin ? next() : res.redirect('/admin/login');
@@ -125,49 +137,11 @@ app.get('/robots.txt', (_, res) => {
 });
 
 // ════════════════════════════════════════════════════════════
-//  CUSTOMER AUTH (OTP via email)
+//  CUSTOMER AUTH — 100% Firebase (Google Sign-In + Email Link).
+//  No Gmail SMTP / nodemailer / custom OTP anywhere in this flow.
 // ════════════════════════════════════════════════════════════
 
-// ── OTP Auth (DB-backed, Gmail SMTP — 100% free) ─────────────
-app.post('/api/auth/send-otp', async (req, res) => {
-  const { email, name } = req.body;
-  if (!email) return res.status(400).json({ error: 'Email required' });
-  const otp = genOtp();
-  const expiry = new Date(Date.now() + 10 * 60 * 1000);
-  // Upsert OTP in MongoDB — survives server restarts unlike session
-  await OtpRecord.findOneAndUpdate({ email }, { email, otp, expiry, name: name||email.split('@')[0] }, { upsert: true });
-  // Send via nodemailer (free Gmail SMTP)
-  await sendEmail(email, `Your Brajwasi Travels Login OTP: ${otp}`,
-    `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#fff;border-radius:12px">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="background:linear-gradient(135deg,#B8780A,#8A5A06);display:inline-block;padding:12px 20px;border-radius:10px">
-          <span style="color:#fff;font-size:20px;font-weight:700">Brajwasi Travels</span>
-        </div>
-      </div>
-      <h2 style="color:#B8780A;text-align:center">🔐 Your Login OTP</h2>
-      <p style="color:#7a6a55">Hello${name ? ' <strong>' + name + '</strong>' : ''},</p>
-      <p style="color:#7a6a55">Your one-time password to login to Brajwasi Travels:</p>
-      <div style="font-size:42px;font-weight:900;color:#B8780A;letter-spacing:12px;text-align:center;padding:24px;background:#FFF8EC;border-radius:14px;margin:20px 0;border:2px dashed rgba(184,120,10,.3)">${otp}</div>
-      <p style="color:#7a6a55;font-size:13px;text-align:center">⏰ Expires in <strong>10 minutes</strong>. Do not share with anyone.</p>
-      <hr style="border:none;border-top:1px solid #E8DDD0;margin:20px 0">
-      <p style="color:#A0917E;font-size:12px;text-align:center">Brajwasi Tour & Travels · Agra, India · 9411061000</p>
-    </div>`);
-  res.json({ success: true });
-});
-
-app.post('/api/auth/verify-otp', async (req, res) => {
-  const { email, otp } = req.body;
-  const record = await OtpRecord.findOne({ email });
-  if (!record) return res.status(400).json({ error: 'No OTP found. Please request a new one.' });
-  if (record.otp !== otp) return res.status(400).json({ error: 'Invalid OTP. Check your email.' });
-  if (new Date() > record.expiry) return res.status(400).json({ error: 'OTP expired. Request a new one.' });
-  await OtpRecord.deleteOne({ email });
-  const name = record.name || email.split('@')[0];
-  req.session.customer = { email, name };
-  res.json({ success: true, name, email });
-});
-
-// Firebase ID token login (Google Sign-In from client)
+// Firebase ID token login (Google Sign-In OR Email-Link sign-in — both land here)
 app.post('/api/auth/firebase-login', async (req, res) => {
   const { idToken } = req.body;
   if (!idToken) return res.status(400).json({ error: 'ID token required' });
@@ -235,7 +209,7 @@ app.post('/api/book', customerAuth, async (req, res) => {
     });
     await pushAdmin('🚗 New Booking!', `${customerName} · ${car.model} · ${pickupLocation} → ${dropLocation}`, { url: '/admin/bookings', bookingId });
     await pushCustomer(customerPhone, '🎉 Booking Received!', `Hi ${customerName}! Booking ${bookingId} received. We will confirm shortly.`, { url: '/track?bookingId=' + bookingId });
-    await sendEmail(process.env.EMAIL_TO || process.env.EMAIL_USER, `🚗 New Booking ${bookingId} – ${customerName}`,
+    sendEmail(process.env.EMAIL_TO || process.env.EMAIL_FROM, `🚗 New Booking ${bookingId} – ${customerName}`,
       `<div style="font-family:Arial;max-width:580px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e8ddd0">
         <div style="background:linear-gradient(135deg,#B8780A,#8A5A06);padding:20px 24px"><h2 style="color:#fff;margin:0">🚗 New Booking – ${bookingId}</h2></div>
         <table style="width:100%;border-collapse:collapse;font-size:14px">
@@ -434,7 +408,7 @@ app.post('/api/driver/reset-secret/send-otp', async (req, res) => {
   if (!partner) return res.status(404).json({ error: 'No partner found with this email' });
   const otp = genOtp();
   await CarPartner.findByIdAndUpdate(partner._id, { resetOtp: otp, resetOtpExpiry: new Date(Date.now()+10*60000) });
-  await sendEmail(email, `Brajwasi Driver Secret Reset OTP: ${otp}`,
+  sendEmail(email, `Brajwasi Driver Secret Reset OTP: ${otp}`,
     `<div style="font-family:Arial,sans-serif;max-width:420px;padding:24px;background:#fff;border-radius:12px">
       <h2 style="color:#B8780A">🔐 Reset Your Driver Secret</h2>
       <p>Your OTP to reset your driver secret code:</p>
@@ -506,7 +480,7 @@ app.post('/api/partner/register', uploadDocs.fields([
       driverSecret: driverSecret.trim(), status: 'pending', commissionPct: 10
     });
     await pushAdmin('🚗 New Partner Registration', `${ownerName} · ${carModel} (${carNumber})`, { url: '/admin' });
-    await sendEmail(process.env.EMAIL_TO || process.env.EMAIL_USER, `New Partner: ${ownerName}`,
+    sendEmail(process.env.EMAIL_TO || process.env.EMAIL_FROM, `New Partner: ${ownerName}`,
       `<div style="font-family:Arial;max-width:480px"><h2 style="color:#B8780A">New Partner Registration</h2><p><b>Name:</b> ${ownerName}</p><p><b>Phone:</b> ${phone}</p><p><b>Car:</b> ${carModel} (${carNumber})</p><p>Login to admin to review.</p></div>`);
     res.json({ success: true, partnerId: partner._id });
   } catch(e) { console.error(e); res.status(500).json({ error: e.message }); }
@@ -614,9 +588,10 @@ app.post('/admin/bookings/:id/assign', adminAuth, async (req, res) => {
   const partner = await CarPartner.findById(req.body.partnerId);
   if (!partner) return res.status(404).json({ error: 'Partner not found' });
   const booking = await Booking.findByIdAndUpdate(req.params.id, { assignedPartner: req.body.partnerId, assignedPartnerName: `${partner.ownerName} (${partner.carModel} · ${partner.carNumber})` }, { new: true });
+  if (!booking) return res.status(404).json({ error: 'Booking not found' }); // was previously unchecked — caused the endless "rolling" spinner
   const commission = Math.round((booking.totalPrice || 0) * partner.commissionPct / 100);
   const earning = (booking.totalPrice || 0) - commission;
-  await sendEmail(partner.email, `Booking Assigned – ${booking.bookingId}`,
+  sendEmail(partner.email, `Booking Assigned – ${booking.bookingId}`,
     `<div style="font-family:Arial;max-width:540px;margin:0 auto;border:1px solid #e8ddd0;border-radius:12px;overflow:hidden">
       <div style="background:linear-gradient(135deg,#B8780A,#8A5A06);padding:18px 22px"><h2 style="color:#fff;margin:0">🚗 New Booking Assigned</h2></div>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
@@ -713,13 +688,13 @@ app.post('/admin/testimonials/:id/reject', adminAuth, async (req, res) => { awai
 app.get('/admin/partners', adminAuth, async (req, res) => { res.render('admin/partners', { partners: await CarPartner.find().sort({ createdAt: -1 }) }); });
 app.post('/admin/partners/:id/approve', adminAuth, async (req, res) => {
   const p = await CarPartner.findByIdAndUpdate(req.params.id, { status: 'approved' }, { new: true });
-  await sendEmail(p.email, 'Registration Approved – Brajwasi Tour & Travels',
+  sendEmail(p.email, 'Registration Approved – Brajwasi Tour & Travels',
     `<div style="font-family:Arial;max-width:480px"><h2 style="color:#1A7A3A">✅ Registration Approved!</h2><p>Hello ${p.ownerName},</p><p>Your car ${p.carModel} (${p.carNumber}) is approved. You'll receive booking assignments by email. Remember: ${p.commissionPct}% commission applies.</p><p style="color:#7a6a55;font-size:13px">Your driver secret code: <strong>${p.driverSecret}</strong> — use this in the Driver app to share your location.</p></div>`);
   res.json({ success: true });
 });
 app.post('/admin/partners/:id/reject', adminAuth, async (req, res) => {
   const p = await CarPartner.findByIdAndUpdate(req.params.id, { status: 'rejected' }, { new: true });
-  await sendEmail(p.email, 'Registration Update – Brajwasi Tour & Travels', `<div style="font-family:Arial;max-width:480px"><h2 style="color:#C0392B">Registration Not Approved</h2><p>Hello ${p.ownerName}, unfortunately your registration could not be approved. Please call 9411061000.</p></div>`);
+  sendEmail(p.email, 'Registration Update – Brajwasi Tour & Travels', `<div style="font-family:Arial;max-width:480px"><h2 style="color:#C0392B">Registration Not Approved</h2><p>Hello ${p.ownerName}, unfortunately your registration could not be approved. Please call 9411061000.</p></div>`);
   res.json({ success: true });
 });
 app.delete('/admin/partners/:id/doc', adminAuth, async (req, res) => {
@@ -733,6 +708,15 @@ app.delete('/admin/partners/:id/doc', adminAuth, async (req, res) => {
   res.json({ success: true });
 });
 app.delete('/admin/partners/:id', adminAuth, async (req, res) => { await CarPartner.findByIdAndDelete(req.params.id); res.redirect('/admin/partners'); });
+
+// ── Global error handler ───────────────────────────────────────
+// Any route that throws (sync or async — express-async-errors forwards it here)
+// now ALWAYS gets a response instead of leaving the browser spinner "rolling and rolling" forever.
+app.use((err, req, res, next) => {
+  console.error('❌ Unhandled route error:', err);
+  if (res.headersSent) return next(err);
+  res.status(500).json({ error: err.message || 'Something went wrong. Please try again.' });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ Brajwasi running on port ${PORT}`));
