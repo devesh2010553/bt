@@ -33,6 +33,13 @@
   window._fbSendSignInLink = (email, url) => sendSignInLinkToEmail(auth, email, { url, handleCodeInApp: true });
   window._fbIsSignInLink   = (url) => isSignInWithEmailLink(auth, url);
   window._fbSignInWithLink = (email, url) => signInWithEmailLink(auth, email, url);
+  // This module script is DEFERRED by the browser and finishes loading AFTER the rest of the
+  // page's classic <script> tags have already run. Anything below that depends on window._fb*
+  // must wait for this event instead of assuming Firebase is ready — otherwise (this was the
+  // actual bug) the email-link-login check below runs too early, silently finds window._fb*
+  // undefined, and just looks like a dead redirect back to the homepage.
+  window._fbReady = true;
+  window.dispatchEvent(new Event('firebaseReady'));
 </script>
 <meta name="google-site-verification" content="25vVIruxvnPxmS12tcZykCuX5MjQ3eVOnWd74_PNADg">
 <link rel="manifest" href="/manifest.json">
@@ -714,8 +721,9 @@ document.getElementById('resendOtpBtn').addEventListener('click',function(){
   _sendLoginLink(email).then(function(){_toast('Login link re-sent!','success');}).catch(function(){_toast('Could not resend. Try again.','error');})
     .finally(function(){btn.textContent='Resend link';btn.disabled=false;});
 });
-// On page load: if this page WAS opened from the emailed sign-in link, complete the login automatically
-(function _completeEmailLinkLogin(){
+// On page load: if this page WAS opened from the emailed sign-in link, complete the login automatically.
+// Must wait for the (deferred) Firebase module script to finish — see 'firebaseReady' above.
+function _completeEmailLinkLogin(){
   if(!window._fbIsSignInLink || !window._fbIsSignInLink(window.location.href)) return;
   var email=window.localStorage.getItem('bt_login_email');
   if(!email){ email = window.prompt('Confirm your email to finish signing in:'); }
@@ -735,7 +743,8 @@ document.getElementById('resendOtpBtn').addEventListener('click',function(){
     // Clean the sign-in params out of the URL
     window.history.replaceState({}, document.title, window.location.pathname);
   }).catch(function(e){ _toast('Login link error: '+(e.message||'invalid or expired link'),'error'); });
-})();
+}
+if (window._fbReady) { _completeEmailLinkLogin(); } else { window.addEventListener('firebaseReady', _completeEmailLinkLogin); }
 
 // ── FEEDBACK / TESTIMONIALS ───────────────────────────────
 document.getElementById('openFeedbackBtn').addEventListener('click',function(){showModal('feedbackModal');});
